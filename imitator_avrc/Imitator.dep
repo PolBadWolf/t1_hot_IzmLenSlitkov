@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>2055856198</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\system\crc.cpp</file>
+      <file>$PROJ_DIR$\system\DisplayTimer.cpp</file>
+      <file>$PROJ_DIR$\system\clock.cpp</file>
+      <file>$PROJ_DIR$\system\InitSystem.cpp</file>
+      <file>$PROJ_DIR$\system\key4.cpp</file>
+      <file>$PROJ_DIR$\system\lcd.cpp</file>
+      <file>$PROJ_DIR$\system\moduls.cpp</file>
+      <file>$PROJ_DIR$\system\ports.cpp</file>
+      <file>$PROJ_DIR$\system\rs232.cpp</file>
+      <file>$PROJ_DIR$\system\rs485.cpp</file>
+      <file>$PROJ_DIR$\system\SystemTimerUser.cpp</file>
+      <file>$PROJ_DIR$\dac_ad420.cpp</file>
+      <file>$PROJ_DIR$\menu.cpp</file>
+      <file>$PROJ_DIR$\main.cpp</file>
+      <file>$PROJ_DIR$\ImitWorkSlitok.cpp</file>
+      <file>$PROJ_DIR$\Object.cpp</file>
+      <file>$PROJ_DIR$\ReadDat.cpp</file>
+      <file>$PROJ_DIR$\UserTimer.cpp</file>
+      <file>$PROJ_DIR$\Variable.cpp</file>
+      <file>$PROJ_DIR$\Debug\Obj\ports.r90</file>
+      <file>$PROJ_DIR$\Object.h</file>
+      <file>$PROJ_DIR$\ImitWorkSlitok.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\provolka.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\dac_ad420.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\Object.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\crc.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\SystemTimerUser.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\menu.pbi</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dlAVR-3s-ec_mul-n.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\ReadDat.pbi</file>
+      <file>$PROJ_DIR$\PowerDown.h</file>
+      <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
+      <file>$PROJ_DIR$\Debug\Exe\eeprom.hex</file>
+      <file>$PROJ_DIR$\menu.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\rs232.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\Variable.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\InitSystem.pbi</file>
+      <file>$PROJ_DIR$\system\moduls.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\DisplayTimer.r90</file>
+      <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ImitWorkSlitok.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\inavr.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\PowerDown.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ports.pbi</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm128.xcl</file>
+      <file>$PROJ_DIR$\system\DisplayTimer.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\rs485.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\moduls.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\InitSystem.r90</file>
+      <file>$PROJ_DIR$\UserTimer.h</file>
+      <file>$PROJ_DIR$\variable.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\clock.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\UserTimer.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\Object.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\provolka.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\rs485.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ReadDat.r90</file>
+      <file>$PROJ_DIR$\system\rs232.h</file>
+      <file>$PROJ_DIR$\ReadDat.h</file>
+      <file>$PROJ_DIR$\system\crc.h</file>
+      <file>$TOOLKIT_DIR$\inc\ina90.h</file>
+      <file>$PROJ_DIR$\system\lcd.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\dac_ad420.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\SystemTimerUser.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\clock.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\comp_a90.h</file>
+      <file>$TOOLKIT_DIR$\inc\iom128.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\key4.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\key4.r90</file>
+      <file>$PROJ_DIR$\Debug\Exe\Imitator.d90</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$PROJ_DIR$\system\ports.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\DisplayTimer.pbi</file>
+      <file>$PROJ_DIR$\PowerDown.cpp</file>
+      <file>$PROJ_DIR$\provolka.cpp</file>
+      <file>$PROJ_DIR$\Debug\Obj\UserTimer.pbi</file>
+      <file>$PROJ_DIR$\system\SystemTimerUser.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\dac_ad420.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ImitWorkSlitok.r90</file>
+      <file>$PROJ_DIR$\system\rs485.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\Variable.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\crc.pbi</file>
+      <file>$PROJ_DIR$\system\clock.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\Imitator.a90</file>
+      <file>$PROJ_DIR$\provolka.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\prog.hex</file>
+      <file>$PROJ_DIR$\Debug\Obj\moduls.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\Imitator.pbd</file>
+      <file>$PROJ_DIR$\main.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\menu.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\rs232.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd.r90</file>
+      <file>$PROJ_DIR$\system\key4.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
+      <file>$PROJ_DIR$\Configure.c</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\system\crc.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 84</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 25</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\DisplayTimer.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 75</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 38</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\clock.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 66</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 51</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\InitSystem.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 36</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 48</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\key4.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 69</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 70</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\lcd.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 55</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 94</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\moduls.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 89</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21 37</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21 37</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\ports.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 19</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\rs232.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 34</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 93</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\rs485.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 56</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 46</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 82 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 82 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system\SystemTimerUser.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 65</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 26</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 71 88 32</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\dac_ad420.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 80</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 23</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\menu.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 27</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 92</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 63</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 96</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ImitWorkSlitok.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 40</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 81</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Object.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 53</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 24</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ReadDat.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 29</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\UserTimer.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 78</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 52</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Variable.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 83</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 35</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 58 60 79 45 49 50 20 33 64 59 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\Imitator.d90</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 88 32</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 44 31 38 81 48 24 57 26 52 35 51 25 23 70 94 96 92 89 19 93 46 28</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\PowerDown.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 79 45 49 50 20 33 64 30</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 79 45 49 50 20 33 64 30</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\provolka.cpp</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 22</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 54</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 79 45 49 50 20 33 64 87</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 91 39 68 73 61 41 72 67 97 74 85 62 95 79 45 49 50 20 33 64 87</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\Imitator.a90</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 44 31 38 48 24 26 52 35 25 70 94 96 92 89 19 93 46 28</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\Imitator.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 75 40 36 53 29 65 78 83 66 84 80 69 55 63 27 47 43 34 56</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+    <forcedrebuild>
+      <name>[REBUILD_ALL]</name>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+
