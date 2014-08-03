@@ -45,7 +45,7 @@ namespace ns_izmlen
 #endif
   unsigned long dochet1;
   unsigned long dochet2;
-  unsigned long Base, BaseOb, TimeOb, Len;
+  unsigned long Base, BaseOb, BaseOb1, BaseOb2, TimeOb, TimeOb1, TimeOb2, Len;
   // массив работающих датчиков
   unsigned char WorkDat[6];
   unsigned char WorkDatInd;
@@ -398,8 +398,17 @@ namespace ns_izmlen
         { // заготовка длинее массива датчиков
           dochet1 = timer_mass[1][WorkDat[0]] - timer_mass[0][WorkDat[WorkDatInd-1]];
           Base = vg::rs_Dat[WorkDat[WorkDatInd-1]] - vg::rs_Dat[WorkDat[0]];
-          BaseOb = vg::rs_Dat[WorkDat[WorkDatInd-1]] - vg::rs_Dat[WorkDat[WorkDatInd-2]];
-          TimeOb = timer_mass[0][WorkDat[WorkDatInd-1]] - timer_mass[0][WorkDat[WorkDatInd-2]];
+//          BaseOb = vg::rs_Dat[WorkDat[WorkDatInd-1]] - vg::rs_Dat[WorkDat[WorkDatInd-2]];
+//          TimeOb = timer_mass[0][WorkDat[WorkDatInd-1]] - timer_mass[0][WorkDat[WorkDatInd-2]];
+          // в начале
+          BaseOb1 = vg::rs_Dat[WorkDat[WorkDatInd-1]] - vg::rs_Dat[WorkDat[WorkDatInd-2]];
+          TimeOb1 = timer_mass[0][WorkDat[WorkDatInd-1]] - timer_mass[0][WorkDat[WorkDatInd-2]];
+          // в конце
+          BaseOb2 = vg::rs_Dat[WorkDat[1]] - vg::rs_Dat[WorkDat[0]];
+          TimeOb2 = timer_mass[1][WorkDat[1]] - timer_mass[1][WorkDat[0]];
+          // all
+          BaseOb = BaseOb1 + BaseOb2;
+          TimeOb = TimeOb1 + TimeOb2;
           Len = Base + (dochet1*BaseOb*10/TimeOb+5)/10;
           Len1 = Len1 + Len;
           OpMin++;
