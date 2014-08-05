@@ -89,5 +89,7 @@ extern tc_lcd *scr;
 #include "dac_ad420.h"
 #include "izm_len.h"
 
-#define PortPC  ns_rs232
+#include "OutDebug.h"
+
+//#define PortPC  ns_rs232
 

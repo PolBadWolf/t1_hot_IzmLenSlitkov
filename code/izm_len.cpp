@@ -457,6 +457,8 @@ namespace ns_izmlen
         timer2_step = UkWaitReadInitI;
         timer2 = 5000;
       };
+      //send to
+      SendOutDebug(NewLen, ErrWorkDat, ns_izmlen::timer_mass );
     }
   }
   // ==============================================================================================================
