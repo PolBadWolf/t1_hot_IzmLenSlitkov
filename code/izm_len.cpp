@@ -4,7 +4,6 @@
 
 #define DatPorog 50
 #define DatTypeData unsigned char
-#define TimeOut 25000
 
 #define SetPort(Port, Level)  Port = !Level
 #define PortReadyDef  DDRE_DDE5
@@ -38,7 +37,7 @@ namespace ns_izmlen
   unsigned int  timer2 = 0;
   unsigned char timer2_step = 0;
   // массив регистрации тиков
-#if (TimeOut<65536)
+#if (izmLenTimeOut<65536)
   unsigned int  timer_mass[2][6];
 #else
   unsigned long timer_mass[2][6];
@@ -144,7 +143,7 @@ namespace ns_izmlen
     if (fi_block) return;
     if (fl_timer)
     {
-      if (timer<TimeOut)
+      if (timer<izmLenTimeOut)
         timer++;
       else
       {

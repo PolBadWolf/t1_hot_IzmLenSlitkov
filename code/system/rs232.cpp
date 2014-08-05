@@ -18,10 +18,10 @@
 //------------------------------------
 // UART Buffer Defines
 // 1,2,4,8,16,32,64,128 or 256 bytes
-#define UART_RX_BUFFER_SIZE 32
+#define UART_RX_BUFFER_SIZE 2
 #define UART_RX_BUFFER_MASK ( UART_RX_BUFFER_SIZE - 1 )
 // 1,2,4,8,16,32,64,128 or 256 bytes
-#define UART_TX_BUFFER_SIZE 32
+#define UART_TX_BUFFER_SIZE 128
 #define UART_TX_BUFFER_MASK ( UART_TX_BUFFER_SIZE - 1 )
 #if (UART_RX_BUFFER_SIZE & UART_RX_BUFFER_MASK)
 #error RS232 RX buffer size is not a power of 2

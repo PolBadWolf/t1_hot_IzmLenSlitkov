@@ -68,7 +68,7 @@ extern tc_lcd *scr;
 #include "system/rs232.h"
 #endif
 //-------------------------------
-#ifdef CRC
+#ifdef CRC8
 #include "system/crc.h"
 #endif
 //-------------------------------

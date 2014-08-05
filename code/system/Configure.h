@@ -20,9 +20,9 @@
 //          работа 485 интерфейса
 // #define RS485
 //          работа 232 интерфейса
-// #define RS232
+#define RS232
 //          подсчет к.с.
-// #define CRC8
+#define CRC8
 
 // переопределение интерфейса 485 под говорящие имя
 #ifdef RS485
@@ -31,7 +31,7 @@
 
 // переопределение интерфейса 232 под говорящие имя
 #ifdef RS232
-#define CommImitator ns_rs232
+#define PortForDebug ns_rs232
 #endif
 
 #endif

@@ -2016,6 +2016,9 @@
     <name>$PROJ_DIR$\Object.cpp</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\OutDebug.cpp</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\UserTimer.cpp</name>
   </file>
   <file>
