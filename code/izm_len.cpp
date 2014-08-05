@@ -45,7 +45,7 @@ namespace ns_izmlen
 #endif
   unsigned long dochet1;
   unsigned long dochet2;
-  unsigned long Base, BaseOb, BaseOb1, BaseOb2, TimeOb, TimeOb1, TimeOb2, Len;
+  unsigned long Base, BaseOb, BaseOb1, BaseOb2, TimeOb, TimeOb1, TimeOb2, Len, otr1, otr2;
   // массив работающих датчиков
   unsigned char WorkDat[6];
   unsigned char WorkDatInd;
@@ -409,7 +409,9 @@ namespace ns_izmlen
           // all
           BaseOb = BaseOb1 + BaseOb2;
           TimeOb = TimeOb1 + TimeOb2;
-          Len = Base + (dochet1*BaseOb*10/TimeOb+5)/10;
+          otr1 = (dochet1*BaseOb1*10/TimeOb1+5)/10;
+          otr2 = (dochet1*BaseOb2*10/TimeOb2+5)/10;
+          Len = Base + (otr1+otr2)/2;
           Len1 = Len1 + Len;
           OpMin++;
         }
