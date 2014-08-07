@@ -86,6 +86,18 @@ namespace ns_menu
   void SetSensYn_zm();
   void SetSensYn_zp();
   // ================================================================================================================
+  void SetKoff();  
+  void SetKoff_v();
+  void SetKoff_m();
+  void SetKoff_zm();
+  void SetKoff_zp();
+  void SetKoff_e();
+  // ================================================================================================================
+    void SetKoffYn();
+    void SetKoffYn_zm();
+    void SetKoffYn_zp();
+  // ================================================================================================================
+  void FnVoid();
   // ================================================================================================================
   void (* const __flash MassMenu[][7])(void) = {
 //    0                 1               2                 3                 4                 5               e
@@ -109,7 +121,10 @@ namespace ns_menu
     { FnVoid            , SetSensor_m   , SetSensor_zm    , SetSensor_zp    , SetSensor_i     , ExitSetup       , SetSensor       },
 #define UkSetSensYn       9
     { FnVoid            , SetSensYn_m   , SetSensYn_zm    , SetSensYn_zp    , FnVoid          , ExitSetup       , SetSensYn       },
-    { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          },
+#define UkSetKoff         10
+    { SetKoff_v         , SetKoff_m     , SetKoff_zm      , SetKoff_zp      , SetKoff_e       , ExitSetup       , SetKoff         },
+#define UkSetKoffYn       11
+    { FnVoid            , FnVoid        , SetKoffYn_zm    , SetKoffYn_zp    , FnVoid          , ExitSetup       , SetKoffYn       },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          }
@@ -154,6 +169,7 @@ namespace ns_menu
   char __flash Default_msg3[] = "Error     ";
   char __flash Default_msg4[] = "Sensors : ";
   char __flash Default_msg5[] = "Len=?           ";
+  unsigned char DefaultFshow = 1;
   void Default()
   {
     {
@@ -164,6 +180,8 @@ namespace ns_menu
     scr->Clear();
     step = UkDefault;
     scr->F_String(0 , Default_msg1);
+    DefaultFshow = 1;
+    Default_v();
     for (unsigned char i=0; i<6; i++)
     {
       scr->F_Char(10+i, !(bool)ns_izmlen::dat[i]->level() ); 
@@ -171,7 +189,7 @@ namespace ns_menu
   }
   void Default_v()
   {
-    if ( ns_izmlen::SensorNewDate )
+    if ( ns_izmlen::SensorNewDate || DefaultFshow )
     {
       ns_izmlen::SensorNewDate = false;
       for (unsigned char i=0; i<6; i++)
@@ -179,10 +197,10 @@ namespace ns_menu
         scr->F_Char(10+i, !(bool)ns_izmlen::dat[i]->level() ); 
       }
     }
-    if ( ns_izmlen::flNewLen )
+    if ( ns_izmlen::flNewLen || DefaultFshow )
     {
       ns_izmlen::flNewLen = false;
-      if (ns_izmlen::NewLen==0)
+      if (ns_izmlen::NewLen==0 && !DefaultFshow )
       {
         scr->F_String(0 , Default_msg3);
         scr->F_String(16, Default_msg4);
@@ -211,6 +229,7 @@ namespace ns_menu
     {
         scr->F_String(16, Default_msg5);
     }
+    DefaultFshow = 0;
   }
   // ================================================================================================================
   char __flash InputSetup_msg1[] = "Input password:";
@@ -326,16 +345,17 @@ namespace ns_menu
     }
   }
   // ================================================================================================================
-#define SetupLen 7
+#define SetupLen 8
   char __flash SetupMenu_msg1[] = "Menu:";
   char __flash  SetupMenuList[SetupLen][17] = {
-    { "Distance to S1" },
-    { "Distance to S2" },
-    { "Distance to S3" },
-    { "Distance to S4" },
-    { "Distance to S5" },
-    { "Distance to S6" },
-    { "Set new password" }
+    { "Distance to S1  " },
+    { "Distance to S2  " },
+    { "Distance to S3  " },
+    { "Distance to S4  " },
+    { "Distance to S5  " },
+    { "Distance to S6  " },
+    { "Set new password" },
+    { "Set K averaging " }
   };
   void SetupMenu()
   {
@@ -384,6 +404,11 @@ namespace ns_menu
     if (SetupMenuInd<6)
     {
       SetSensor();
+      return;
+    }
+    if (SetupMenuInd==7)
+    {
+      SetKoff();
       return;
     }
   }
@@ -585,8 +610,77 @@ namespace ns_menu
     vg::rs_Dat[SetupMenuInd] = SetSensorDl;
     SetupMenu();
   }
-  // ================================================================================================================
-  // ================================================================================================================
+// ================================================================================================================
+    unsigned char koffTmp = 0;
+    char __flash SetKoff_msg1[] = "(V1+V2)/K  K=";
+    char __flash SetKoff_msg2[] = "can.  -  + enter";
+    char __flash SetKoff_msg3[] = "Save? (-/+)";
+    void SetKoff()
+    {
+        koffTmp = vg::kf_usr;
+        step = UkSetKoff;
+        scr->Clear();
+        scr->F_String(0            , SetKoff_msg1 );
+        scr->F_String(c_stolbcov+0 , SetKoff_msg2 );
+        SetKoff_v();
+        {
+          CritSec cs;
+          timeout_max = 120000;
+          timeout = timeout_max;
+        }
+  }
+  void SetKoff_v()
+  {
+      scr->Char(13, '0'+(koffTmp/10)%10 );
+      scr->Char(14, '.' );
+      scr->Char(15, '0'+(koffTmp%10) );
+  }
+  void SetKoff_m()
+  {
+      SetupMenu();
+  }
+  void SetKoff_zm()
+  {
+      if (koffTmp<=15)
+          koffTmp = 15;
+      else
+          koffTmp--;
+      SetKoff_v();
+  }
+  void SetKoff_zp()
+  {
+      if (koffTmp>=25)
+          koffTmp = 25;
+      else
+          koffTmp++;
+      SetKoff_v();
+  }
+  void SetKoff_e()
+  {
+      SetKoffYn();
+  }
+  // ===============================================================================================================
+    void SetKoffYn()
+    {
+        step = UkSetKoffYn;
+        scr->Clear();
+        scr->F_String(0            , SetKoff_msg1 );
+        scr->F_String(c_stolbcov+0 , SetKoff_msg3 );
+        {
+          CritSec cs;
+          timeout_max = 30000;
+          timeout = timeout_max;
+        }
+    }
+    void SetKoffYn_zm()
+    {
+        ExitSetup();
+    }
+    void SetKoffYn_zp()
+    {
+        vg::kf_usr = koffTmp;
+        ExitSetup();
+    }
   // ================================================================================================================
   // ================================================================================================================
   // ================================================================================================================

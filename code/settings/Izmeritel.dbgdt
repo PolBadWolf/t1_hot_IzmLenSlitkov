@@ -34,7 +34,7 @@
       <Watch>
         <Format>
           <struct_types/>
-          <watch_formats><Fmt><Key>{W}Watch-0:poz</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:s</Key><Value>5</Value></Fmt></watch_formats>
+          <watch_formats><Fmt><Key>{W}Watch-0:indx</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:poz</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:s</Key><Value>5</Value></Fmt></watch_formats>
         </Format>
         
         
@@ -46,7 +46,7 @@
       
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-29992-5257</Identity>
@@ -62,7 +62,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd4>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-7972-5260</Identity>
@@ -74,7 +74,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd4><Wnd5>
+      <SelectedTab>0</SelectedTab></Wnd1><Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-26625-5525</Identity>
@@ -84,7 +84,7 @@
               <Expressions>
                 
                 
-              <Expression><Expression>poz</Expression></Expression><Expression><Expression>s</Expression></Expression><Expression><Expression>Stroka</Expression></Expression><Expression><Expression>screen</Expression></Expression><Expression><Expression>i</Expression></Expression><Expression><Expression>poz1</Expression></Expression><Expression><Expression>cif</Expression></Expression><Expression><Expression>cif_low</Expression></Expression></Expressions>
+              <Expression><Expression>massiveSend</Expression></Expression><Expression><Expression>lenSlitok</Expression></Expression><Expression><Expression>workSensor</Expression></Expression><Expression><Expression>timer_mass</Expression></Expression><Expression><Expression>indx</Expression></Expression><Expression><Expression>sensor</Expression></Expression><Expression><Expression>vg::rs_Dat[0]</Expression></Expression><Expression><Expression>dd</Expression></Expression></Expressions>
               
               
               
@@ -94,20 +94,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd5></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\Program Files\IAR Systems\Embedded Workbench 5.3\avr\inc\iom128.h</Filename><XPos>0</XPos><YPos>90</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\prj\T1\Hot\Izmeritel_2013_10_31\avr_c\menu.cpp</Filename><XPos>0</XPos><YPos>172</YPos><SelStart>8035</SelStart><SelEnd>8045</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\prj\T1\Hot\Izmeritel_2013_10_31\avr_c\system\lcd.cpp</Filename><XPos>0</XPos><YPos>400</YPos><SelStart>11086</SelStart><SelEnd>11086</SelEnd></Tab><ActiveTab>2</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>D:\prj\T1\Hot\Izmeritel_2013_10_31\avr_c\system\lcd.h</Filename><XPos>0</XPos><YPos>41</YPos><SelStart>1250</SelStart><SelEnd>1250</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\prj\T1\Hot\Izmeritel_2013_10_31\avr_c\izm_len.cpp</Filename><XPos>0</XPos><YPos>351</YPos><SelStart>10270</SelStart><SelEnd>10270</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\prj\T1\Hot\Izmeritel_2013_10_31\avr_c\main.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>93</SelStart><SelEnd>93</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len.cpp</Filename><XPos>0</XPos><YPos>404</YPos><SelStart>12542</SelStart><SelEnd>12542</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\main.h</Filename><XPos>0</XPos><YPos>66</YPos><SelStart>1871</SelStart><SelEnd>1871</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\Configure.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>698</SelStart><SelEnd>710</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\OutDebug.cpp</Filename><XPos>0</XPos><YPos>30</YPos><SelStart>1897</SelStart><SelEnd>1897</SelEnd></Tab><ActiveTab>3</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\OutDebug.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>252</SelStart><SelEnd>252</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>514</SelStart><SelEnd>524</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\Variable.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>35</SelStart><SelEnd>35</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\variable.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>334</SelStart><SelEnd>340</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\crc.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>68</SelStart><SelEnd>68</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\crc.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>103</SelStart><SelEnd>111</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\rs232.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>127</SelStart><SelEnd>136</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\rs232.cpp</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>630</SelStart><SelEnd>630</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\main.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>20</SelStart><SelEnd>20</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0128eb40><key>iaridepm.enu1</key></Toolbar-0128eb40></Sizes></Row0><Row1><Sizes><Toolbar-054e57d8><key>debuggergui.enu1</key></Toolbar-054e57d8></Sizes></Row1></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>851</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>762970</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>851</Bottom><Right>591</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>308854</sizeVertCX><sizeVertCY>762970</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>178891</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0128ec70><key>iaridepm.enu1</key></Toolbar-0128ec70></Sizes></Row0><Row1><Sizes><Toolbar-06396780><key>debuggergui.enu1</key></Toolbar-06396780></Sizes></Row1></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>851</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>762970</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>851</Bottom><Right>591</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>308854</sizeVertCX><sizeVertCY>762970</sizeVertCY></Rect></Wnd3></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>178891</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

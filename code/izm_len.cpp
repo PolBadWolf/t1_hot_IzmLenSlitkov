@@ -410,7 +410,7 @@ namespace ns_izmlen
           TimeOb = TimeOb1 + TimeOb2;
           otr1 = (dochet1*BaseOb1*10/TimeOb1+5)/10;
           otr2 = (dochet1*BaseOb2*10/TimeOb2+5)/10;
-          Len = Base + (otr1+otr2)/2;
+          Len = Base + ((otr1+otr2)*10)/vg::kf_usr;
           Len1 = Len1 + Len;
           OpMin++;
         }

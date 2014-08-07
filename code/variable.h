@@ -18,6 +18,7 @@ namespace vg
   __eeprom extern unsigned int rs_Dat[];
   extern unsigned int rs_slitok_len;
   extern unsigned int rs_slitok_speed;
+  extern __eeprom unsigned char kf_usr;
 }
 
 #endif
