@@ -159,8 +159,8 @@ namespace ns_menu
       }
       scr->F_Char(10+i, !(bool)ns_izmlen::dat[i]->level() ); 
     }
-    if ( ns_izmlen::step==0 ) return;
-    if ( ns_izmlen::step==1 ) return;
+    if ( ns_izmlen::ReadStep()==0 ) return;
+    if ( ns_izmlen::ReadStep()==1 ) return;
     Default();
   }
   // ================================================================================================================
@@ -225,7 +225,7 @@ namespace ns_menu
             scr->Char(26+i, ' ' );
         }
     }
-    if (ns_izmlen::step==4)
+    if (ns_izmlen::ReadStep()==4)
     {
         scr->F_String(16, Default_msg5);
     }

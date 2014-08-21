@@ -28,20 +28,20 @@ namespace ns_izmlen
   // флаг разрешения работы счета тиков
   unsigned char fl_timer = 0;
   // счетчик тиков
-#if (TimeOut<65536)
-  unsigned int  timer = 1;
-#else
+//#if (izmLenTimeOut<65536)
+//  unsigned int  timer = 1;
+//#else
   unsigned long timer = 1;
-#endif
+//#endif
   bool fl_time_out = false;
   unsigned int  timer2 = 0;
   unsigned char timer2_step = 0;
   // массив регистрации тиков
-#if (izmLenTimeOut<65536)
-  unsigned int  timer_mass[2][6];
-#else
+//#if (izmLenTimeOut<65536)
+//  unsigned int  timer_mass[2][6];
+//#else
   unsigned long timer_mass[2][6];
-#endif
+//#endif
   unsigned long dochet1;
   unsigned long dochet2;
   unsigned long Base, BaseOb, BaseOb1, BaseOb2, TimeOb, TimeOb1, TimeOb2, Len, otr1, otr2;
@@ -89,49 +89,73 @@ namespace ns_izmlen
 #define UkFistWaitOffI    7
     FistWaitOffI,
 #define UkWaitReadInitI   8
-    WaitReadInitI,
-    Empty
+    WaitReadInitI
+        //,
+//    Empty
   };
   unsigned char EventMassLen;
-  // ==============================================================================================================
-  void init()
-  {
-    ad420_Init();
-    ad420_SwapWord(0);
-    PortReadyDef = 1;
-    PortNobDef = 1;
-    SetPort(PortReady, 0);
-    SetPort(PortNob, 0);
-//  dat[0] = new tc_ports1<DatTypeData>(port, bit, Porog, Event, tag);
-    dat[0] = new tc_ports1<DatTypeData>('f', 0, DatPorog, Event, 0);
-    dat[1] = new tc_ports1<DatTypeData>('f', 1, DatPorog, Event, 1);
-    dat[2] = new tc_ports1<DatTypeData>('f', 2, DatPorog, Event, 2);
-    dat[3] = new tc_ports1<DatTypeData>('f', 3, DatPorog, Event, 3);
-    dat[4] = new tc_ports1<DatTypeData>('f', 4, DatPorog, Event, 4);
-    dat[5] = new tc_ports1<DatTypeData>('f', 5, DatPorog, Event, 5);
-    EventMassLen = sizeof(EventMass) / sizeof(EventMass[0]);
-    fi_block = false;
-    for (unsigned char d=0; d<6; d++)
+    inline void SetStep(unsigned char newStep)
     {
-      Event( dat[d]->level(), d);
+        CritSec ns_cs;
+        step = newStep;
     }
+    inline unsigned char ReadStep()
+    {
+        unsigned char o;
+        {
+            CritSec rd_cs;
+            o = step;
+        }
+        return o;
+    }
+  // ==============================================================================================================
+    void init()
+    {
+        // настройка и выдача нуля по токову интерфесу
+        ad420_Init();
+        ad420_SwapWord(0);
+        // настройка портов
+        PortReadyDef = 1;
+        PortNobDef = 1;
+        SetPort(PortReady, 0);
+        SetPort(PortNob, 0);
+        // create object sensors
+    //  dat[0] = new tc_ports1<DatTypeData>(port, bit, Porog, Event, tag);
+        dat[0] = new tc_ports1<DatTypeData>('f', 0, DatPorog, Event, 0);
+        dat[1] = new tc_ports1<DatTypeData>('f', 1, DatPorog, Event, 1);
+        dat[2] = new tc_ports1<DatTypeData>('f', 2, DatPorog, Event, 2);
+        dat[3] = new tc_ports1<DatTypeData>('f', 3, DatPorog, Event, 3);
+        dat[4] = new tc_ports1<DatTypeData>('f', 4, DatPorog, Event, 4);
+        dat[5] = new tc_ports1<DatTypeData>('f', 5, DatPorog, Event, 5);
+        // len massive events
+        EventMassLen = sizeof(EventMass) / sizeof(EventMass[0]);
+    fi_block = false;
+        SetStep(0);
   }
   // ==============================================================================================================
   void Event(unsigned char level, unsigned char tag)
   { // событие сработки датчика
+    void (*EventT)(unsigned char level, unsigned char tag);
+    unsigned char tStep;
 #ifdef DebugSensorError
     scr->F_Char(tag, '0'+level);
 #endif
     // проверка на коррекность кода
-    if (step<EventMassLen)
+    tStep = ReadStep();
+    if (tStep<EventMassLen)
     {
       SensorNewDate = true;
-      EventMass[step](level, tag);
+      //EventMass[step](level, tag);
+      {
+        CritSec cs;
+        EventT = EventMass[step];
+      }
+      EventT(level, tag);
     }
     else
     {
       // ошибка в коде или логике программы
-      step = 0;
+      SetStep(0);
     }
 #ifdef DebugSensorError
     scr->Hex(8, step);
@@ -149,7 +173,7 @@ namespace ns_izmlen
       {
         fl_timer = 0;
         fl_time_out = true;
-        step = UkRender;
+        SetStep(UkRender);
       }
     }
     dat[0]->for_timer();
@@ -158,13 +182,13 @@ namespace ns_izmlen
     dat[3]->for_timer();
     dat[4]->for_timer();
     dat[5]->for_timer();
-    if (timer2>1)
-      timer2--;
     if (timer2==1)
     {
       timer2 = 0;
-      step = timer2_step;
+      SetStep(timer2_step);
     }
+    if (timer2>1)
+      timer2--;
   }
   // ==============================================================================================================
   void Empty(unsigned char level, unsigned char tag)
@@ -176,7 +200,7 @@ namespace ns_izmlen
     // выключить счет тиков
     fl_timer = 0;
     VarOperatingMode = false;
-    step = UkFistWaitOff;
+    SetStep(UkFistWaitOff);
   }
   // ==============================================================================================================
   void FistWaitOff(unsigned char level, unsigned char tag)
@@ -191,7 +215,7 @@ namespace ns_izmlen
     { 
       VarOperatingMode = true;
       // на начало измерений
-      step = UkWaitReadInit;
+      SetStep(UkWaitReadInit);
     }
   }
   // ==============================================================================================================
@@ -203,16 +227,19 @@ namespace ns_izmlen
     // сброс флага ошибки 
     fl_err = 0;
     // сброс массива тиков
-    for (unsigned char ud=0; ud<2; ud++)
     {
-      for (unsigned char nd=0; nd<6; nd++)
-      {
-          timer_mass[ud][nd] = 0;
-      }
+        CritSec ms_cs;
+        for (unsigned char ud=0; ud<2; ud++)
+        {
+          for (unsigned char nd=0; nd<6; nd++)
+          {
+              timer_mass[ud][nd] = 0;
+          }
+        }
+        fl_timer = 0;
     }
-    fl_timer = 0;
     // на ожидание срабатывания датчиков
-    step = UkWaitReadBegin;
+    SetStep(UkWaitReadBegin);
     WaitReadBegin(level, tag);
   }
   // ==============================================================================================================
@@ -287,16 +314,16 @@ namespace ns_izmlen
   // ==============================================================================================================
   void main()
   {
+    // curen step
     unsigned char temp;
-    {
-      CritSec cs;
-      temp = step;
-    }
+    temp = ReadStep();
+    // step wait for off sensors
     if ( temp==UkFistWaitOffI )
     {
       FistWaitOffI1();
       return;
     }
+    
     if ( temp==UkWaitReadInitI )
     {
       WaitReadInitI1();
@@ -333,7 +360,7 @@ namespace ns_izmlen
       _delay_ms(500);
       SetPort(PortReady, 1);
       flNewLen = true;
-      step = UkBlock;
+      SetStep(UkBlock);
       {
         CritSec cs;
         timer2_step = UkFistWaitOffI;
@@ -380,7 +407,7 @@ namespace ns_izmlen
         _delay_ms(500);
         SetPort(PortReady, 1);
         flNewLen = true;
-        step = UkBlock;
+        SetStep(UkBlock);
         {
           CritSec cs;
           timer2_step = UkWaitReadInitI;
@@ -474,7 +501,7 @@ namespace ns_izmlen
   void FistWaitOffI1()
   {
     SetPort(PortReady, 0);
-    step = UkFistWaitOff;
+    SetStep(UkFistWaitOff);
   }
   // ==============================================================================================================
   void WaitReadInitI(unsigned char level, unsigned char tag)
@@ -484,7 +511,7 @@ namespace ns_izmlen
   void WaitReadInitI1()
   {
     SetPort(PortReady, 0);
-    step = UkWaitReadInit;
+    SetStep(UkWaitReadInit);
       ad420_SwapWord(0);
   }
   // ==============================================================================================================

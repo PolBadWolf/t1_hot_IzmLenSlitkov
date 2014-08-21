@@ -16,18 +16,12 @@ void main(void)
   ns_menu::init();
 #endif
   //=============
-  // scr->Clear();
-//  ns_izmlen::ShowDat();
-  //scr->dig_uz(0,10, vg::DD_save );
-  //scr->F_String(c_stolbcov+0, "S R P");
   while(true)
   {
-  //ns_ReadDat::cycl();
-  //ImitWorkCycl();
     ns_izmlen::main();
-    #ifdef MENU
+#ifdef MENU
     ns_menu::main();
-    #endif
+#endif
     //=============
   }
 }

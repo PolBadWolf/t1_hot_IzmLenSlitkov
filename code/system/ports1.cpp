@@ -34,6 +34,8 @@ tc_ports1<unsigned char>::tc_ports1(unsigned char PortName, unsigned char PortBi
   tr = (bool)(*p_in & p_mask) ^ inv;
   if (tr) Count = Porog;
   else    Count = 0;
+  // init status
+  for_timer();
 }
 tc_ports1<unsigned int >::tc_ports1(unsigned char PortName, unsigned char PortBit, unsigned int  Nintegr)
 {
@@ -66,6 +68,8 @@ tc_ports1<unsigned int >::tc_ports1(unsigned char PortName, unsigned char PortBi
   tr = (bool)(*p_in & p_mask) ^ inv;
   if (tr) Count = Porog;
   else    Count = 0;
+  // init status
+  for_timer();
 }
 // =====================================================================================================================================================================================
 tc_ports1<unsigned char>::tc_ports1(unsigned char PortName, unsigned char PortBit, unsigned char Nintegr, void (*pEvent)(unsigned char level, unsigned char tag), unsigned char tag)
@@ -99,6 +103,8 @@ tc_ports1<unsigned char>::tc_ports1(unsigned char PortName, unsigned char PortBi
   tr = (bool)(*p_in & p_mask) ^ inv;
   if (tr) Count = Porog;
   else    Count = 0;
+  // init status
+  for_timer();
 }
 tc_ports1<unsigned int >::tc_ports1(unsigned char PortName, unsigned char PortBit, unsigned int  Nintegr, void (*pEvent)(unsigned char level, unsigned char tag), unsigned char tag)
 {
@@ -131,6 +137,8 @@ tc_ports1<unsigned int >::tc_ports1(unsigned char PortName, unsigned char PortBi
   tr = (bool)(*p_in & p_mask) ^ inv;
   if (tr) Count = Porog;
   else    Count = 0;
+  // init status
+  for_timer();
 }
 // =====================================================================================================================================================================================
 void tc_ports1<unsigned char>::for_timer()

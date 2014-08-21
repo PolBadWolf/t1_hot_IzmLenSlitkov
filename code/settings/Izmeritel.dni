@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=59777921
+Checksum=-498942435
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -25,11 +25,13 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.41.1@1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.5.1@1" 0 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.51.5@1" 1 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{$PROJ_DIR$\menu.cpp}.125.1@1" 1 0 0 0 "" 0 ""
-Count=4
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.5.1@1" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.51.5@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{$PROJ_DIR$\menu.cpp}.138.5@1" 1 0 0 0 "" 0 ""
+Bp3=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.323.7@1" 1 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.363.1@1" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.360.1@1" 1 0 0 0 "" 0 ""
+Count=6
 [TraceHelper]
 Enabled=0
 ShowSource=1
