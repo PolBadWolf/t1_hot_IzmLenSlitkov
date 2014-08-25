@@ -21,5 +21,14 @@ namespace vg
   extern __eeprom unsigned char kf_usr;
 }
 
+//inline void CritVarWrite(T *variable, T *newDat);
+
+//unsigned char CritVarRead(unsigned char *variable);
+/*
+template <class T>
+T CritVarRead(T *variable);
+unsigned char CritVarRead(unsigned char *variable);
+*/
+
 #endif
 

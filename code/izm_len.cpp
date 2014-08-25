@@ -2,9 +2,6 @@
 #include "main.h"
 #include "izm_len.h"
 
-#define DatPorog 50
-#define DatTypeData unsigned char
-
 #define SetPort(Port, Level)  Port = !Level
 #define PortReadyDef  DDRE_DDE5
 #define PortReady     PORTE_PORTE5
@@ -15,33 +12,40 @@
   scr->F_String(c_stolbcov+0, "Error sensor"); \
   scr->ShowChar(c_stolbcov+12, '0'+tag);
 
+
+      
 namespace ns_izmlen
 {
-  // флаг блокировки работы модуля
-  unsigned char fi_block = true;
-  // рабочий режим
-  bool VarOperatingMode = false;
-  // массив датчиков
-  tc_ports1<DatTypeData> *dat[6];
-  // шаг/режим работы события срабативания датчиков
+    CRITVARREAD
+    // massive sensors
+    tc_ports1<izmLen_DatType> *dat[6];
+    // flag block this modul
+    unsigned char fi_block = true;
+    // flag on work count tiks
+    unsigned char fl_timer = 0;
+    // count tiks
+#if   (izmLen_TimeOut<256)
+    unsigned char timer = 1;
+#elif (izmLen_TimeOut<65536)
+    unsigned int  timer = 1;
+#else
+    unsigned long timer = 1;
+#endif
+
+
+    // шаг/режим работы события срабативания датчиков
   unsigned char step = 0;
-  // флаг разрешения работы счета тиков
-  unsigned char fl_timer = 0;
-  // счетчик тиков
-//#if (izmLenTimeOut<65536)
-//  unsigned int  timer = 1;
-//#else
-  unsigned long timer = 1;
-//#endif
   bool fl_time_out = false;
   unsigned int  timer2 = 0;
   unsigned char timer2_step = 0;
-  // массив регистрации тиков
-//#if (izmLenTimeOut<65536)
-//  unsigned int  timer_mass[2][6];
-//#else
-  unsigned long timer_mass[2][6];
-//#endif
+    // massive save count tiks from use sensors
+#if   (izmLen_TimeOut<256)
+    unsigned char timer_mass[2][6];
+#elif (izmLen_TimeOut<65536)
+    unsigned int  timer_mass[2][6];
+#else
+    unsigned long timer_mass[2][6];
+#endif
   unsigned long dochet1;
   unsigned long dochet2;
   unsigned long Base, BaseOb, BaseOb1, BaseOb2, TimeOb, TimeOb1, TimeOb2, Len, otr1, otr2;
@@ -89,8 +93,7 @@ namespace ns_izmlen
 #define UkFistWaitOffI    7
     FistWaitOffI,
 #define UkWaitReadInitI   8
-    WaitReadInitI
-        //,
+    WaitReadInitI//,
 //    Empty
   };
   unsigned char EventMassLen;
@@ -121,15 +124,16 @@ namespace ns_izmlen
         SetPort(PortNob, 0);
         // create object sensors
     //  dat[0] = new tc_ports1<DatTypeData>(port, bit, Porog, Event, tag);
-        dat[0] = new tc_ports1<DatTypeData>('f', 0, DatPorog, Event, 0);
-        dat[1] = new tc_ports1<DatTypeData>('f', 1, DatPorog, Event, 1);
-        dat[2] = new tc_ports1<DatTypeData>('f', 2, DatPorog, Event, 2);
-        dat[3] = new tc_ports1<DatTypeData>('f', 3, DatPorog, Event, 3);
-        dat[4] = new tc_ports1<DatTypeData>('f', 4, DatPorog, Event, 4);
-        dat[5] = new tc_ports1<DatTypeData>('f', 5, DatPorog, Event, 5);
+        dat[0] = new tc_ports1<izmLen_DatType>('f', 0, izmLen_DatPorog, Event, 0);
+        dat[1] = new tc_ports1<izmLen_DatType>('f', 1, izmLen_DatPorog, Event, 1);
+        dat[2] = new tc_ports1<izmLen_DatType>('f', 2, izmLen_DatPorog, Event, 2);
+        dat[3] = new tc_ports1<izmLen_DatType>('f', 3, izmLen_DatPorog, Event, 3);
+        dat[4] = new tc_ports1<izmLen_DatType>('f', 4, izmLen_DatPorog, Event, 4);
+        dat[5] = new tc_ports1<izmLen_DatType>('f', 5, izmLen_DatPorog, Event, 5);
         // len massive events
         EventMassLen = sizeof(EventMass) / sizeof(EventMass[0]);
-    fi_block = false;
+        // de block work timer : read sensors & go event
+        fi_block = false;
         SetStep(0);
   }
   // ==============================================================================================================
@@ -141,7 +145,8 @@ namespace ns_izmlen
     scr->F_Char(tag, '0'+level);
 #endif
     // проверка на коррекность кода
-    tStep = ReadStep();
+    tStep = CritVarRead(&step);
+    // tStep = ReadStep();
     if (tStep<EventMassLen)
     {
       SensorNewDate = true;
@@ -162,46 +167,52 @@ namespace ns_izmlen
 #endif
   }
   // -----------------------------------------------------------------------
-  void for_timer()
-  {
-    if (fi_block) return;
-    if (fl_timer)
+    void for_timer()
     {
-      if (timer<izmLenTimeOut)
-        timer++;
-      else
-      {
-        fl_timer = 0;
-        fl_time_out = true;
-        SetStep(UkRender);
-      }
+        // block work irq count, sensors, wait timer call
+        if (fi_block) return;
+        // count tiks
+        if (fl_timer)
+        {
+            if (timer<izmLen_TimeOut)
+                timer++;
+            else
+            {
+                fl_timer = 0;
+                fl_time_out = true;
+                SetStep(UkRender);
+            }
+        }
+        // read sensors
+        dat[0]->for_timer();
+        dat[1]->for_timer();
+        dat[2]->for_timer();
+        dat[3]->for_timer();
+        dat[4]->for_timer();
+        dat[5]->for_timer();
+        // wait timer call
+        if (timer2==1)
+        {
+            timer2 = 0;
+            SetStep(timer2_step);
+        }
+        if (timer2>1)
+            timer2--;
     }
-    dat[0]->for_timer();
-    dat[1]->for_timer();
-    dat[2]->for_timer();
-    dat[3]->for_timer();
-    dat[4]->for_timer();
-    dat[5]->for_timer();
-    if (timer2==1)
-    {
-      timer2 = 0;
-      SetStep(timer2_step);
-    }
-    if (timer2>1)
-      timer2--;
-  }
   // ==============================================================================================================
   void Empty(unsigned char level, unsigned char tag)
   {
   }
-  // ==============================================================================================================
-  void FistInit(unsigned char level, unsigned char tag)
-  { // ожидание освобождения датчиков
-    // выключить счет тиков
-    fl_timer = 0;
-    VarOperatingMode = false;
-    SetStep(UkFistWaitOff);
-  }
+    // ==============================================================================================================
+    void FistInit(unsigned char level, unsigned char tag)
+    {   // ожидание освобождения датчиков
+        // this block work from sensors
+        if ( (level!=255) || (level!=255) )
+            return;
+        // disable count tiks
+        fl_timer = 0;
+        SetStep(UkFistWaitOff);
+    }
   // ==============================================================================================================
   void FistWaitOff(unsigned char level, unsigned char tag)
   {
@@ -213,7 +224,6 @@ namespace ns_izmlen
     }
     if (!x)
     { 
-      VarOperatingMode = true;
       // на начало измерений
       SetStep(UkWaitReadInit);
     }
@@ -312,11 +322,18 @@ namespace ns_izmlen
     }
   }
   // ==============================================================================================================
-  void main()
-  {
-    // curen step
-    unsigned char temp;
-    temp = ReadStep();
+    void main()
+    {
+        // curen step
+        unsigned char temp;
+        temp = ReadStep();
+       // temp = CritVarRead(&step);
+    // this init work
+    if ( temp==UkFistInit )
+    {
+        EventMass[UkFistInit](255,255);
+        return;
+    }
     // step wait for off sensors
     if ( temp==UkFistWaitOffI )
     {
@@ -489,10 +506,6 @@ namespace ns_izmlen
     }
   }
   // ==============================================================================================================
-  bool OperatingMode()
-  {
-    return VarOperatingMode;
-  }
   // ==============================================================================================================
   void FistWaitOffI(unsigned char level, unsigned char tag)
   {

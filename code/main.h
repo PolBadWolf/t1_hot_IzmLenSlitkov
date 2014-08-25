@@ -10,6 +10,14 @@
 #define _delay_us(us)     __delay_cycles((C_Fosc / 1000000) * (us));
 #define _delay_ms(ms)     __delay_cycles((C_Fosc / 1000) * (ms));
 
+#define CRITVARREAD \
+template <class T> \
+inline T CritVarRead(T *variable) \
+{ \
+    CritSec cs; \
+    return *variable; \
+}
+
 class CritSec {
 private:
     unsigned char sav;
@@ -87,7 +95,7 @@ extern tc_lcd *scr;
 #define PorogDatch 20
 #endif
 #include "dac_ad420.h"
-#include "izm_len.h"
+//#include "izm_len.h"
 
 #include "OutDebug.h"
 

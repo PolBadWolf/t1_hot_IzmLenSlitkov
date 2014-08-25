@@ -28,10 +28,11 @@ LogFile=_ ""
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.5.1@1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.51.5@1" 1 0 0 0 "" 0 ""
 Bp2=_ "STD_CODE" "{$PROJ_DIR$\menu.cpp}.138.5@1" 1 0 0 0 "" 0 ""
-Bp3=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.323.7@1" 1 0 0 0 "" 0 ""
-Bp4=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.363.1@1" 1 0 0 0 "" 0 ""
-Bp5=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.360.1@1" 1 0 0 0 "" 0 ""
-Count=6
+Bp3=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.340.7@1" 1 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.380.1@1" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.377.1@1" 1 0 0 0 "" 0 ""
+Bp6=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.213.1@1" 1 0 0 0 "" 0 ""
+Count=7
 [TraceHelper]
 Enabled=0
 ShowSource=1
