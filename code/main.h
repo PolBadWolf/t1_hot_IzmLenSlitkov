@@ -92,10 +92,13 @@ extern tc_lcd *scr;
 #include "object.h"
 #include "menu.h"
 //-------------------------------
+#include "system/watchdog.h"
+//-------------------------------
 #define PorogDatch 20
 #endif
 #include "dac_ad420.h"
 //#include "izm_len.h"
+#include "izm_len1.h"
 
 #include "OutDebug.h"
 

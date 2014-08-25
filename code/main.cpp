@@ -15,13 +15,15 @@ void main(void)
 #ifdef MENU
   ns_menu::init();
 #endif
-  //=============
-  while(true)
-  {
-    ns_izmlen::main();
+    ns_wdogtimer::enabled();
+    //=============
+    while(true)
+    {
+        ns_wdogtimer::reset();
+        ns_izmlen::main();
 #ifdef MENU
-    ns_menu::main();
+        ns_menu::main();
 #endif
     //=============
-  }
+    }
 }

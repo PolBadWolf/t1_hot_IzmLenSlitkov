@@ -11,12 +11,6 @@
 // #define ShowStar
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-// массив датчиков
-namespace ns_izmlen
-{
-  extern tc_ports1<unsigned char> *dat[6];
-}
-
 namespace ns_menu
 {
   // текущий шаг пункта меню
