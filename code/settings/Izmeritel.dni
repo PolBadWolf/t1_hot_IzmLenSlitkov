@@ -27,7 +27,7 @@ LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.5.1@1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.51.5@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{$PROJ_DIR$\menu.cpp}.138.5@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{$PROJ_DIR$\menu.cpp}.132.5@1" 1 0 0 0 "" 0 ""
 Bp3=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.340.7@1" 1 0 0 0 "" 0 ""
 Bp4=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.380.1@1" 1 0 0 0 "" 0 ""
 Bp5=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.377.1@1" 1 0 0 0 "" 0 ""

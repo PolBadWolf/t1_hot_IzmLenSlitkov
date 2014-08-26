@@ -25,7 +25,7 @@ namespace ns_izmlen1
     void for_timer();
     void main();
     // massive sensors
-    extern tc_ports1<unsigned char> *dat[6];
+    extern tc_ports1<unsigned char> *dat[];
 }
 
 #define ns_izmlen ns_izmlen1

@@ -76,6 +76,9 @@ namespace ns_wdogtimer
     WatchDogOff::~WatchDogOff()
     {
         if (stat)
-        enabled();
+        {
+            enabled();
+            reset();
+        }
     }
 }
