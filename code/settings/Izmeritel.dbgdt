@@ -23,30 +23,30 @@
       </Workspace>
       <Disassembly>
         <PreferedWindows>
-          <Position>2</Position>
-          <ScreenPosX>0</ScreenPosX>
-          <ScreenPosY>0</ScreenPosY>
-          <Windows/>
-        </PreferedWindows>
-        <MixedMode>1</MixedMode>
-        <CodeCovShow>0</CodeCovShow>
-      </Disassembly>
+          
+          
+          
+          
+        <Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows>
+        
+        
+      <MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow></Disassembly>
       <Watch>
         <Format>
           <struct_types/>
-          <watch_formats><Fmt><Key>{W}Watch-0:EventMassLen</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:indx</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:poz</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:s</Key><Value>5</Value></Fmt></watch_formats>
+          <watch_formats><Fmt><Key>{W}Watch-0:EventMassLen</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[0]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[1]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[2]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[3]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[4]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[5]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[6]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:dat[7]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:eventMassStep</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:indx</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:poz</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-0:s</Key><Value>5</Value></Fmt><Fmt><Key>{W}Watch-0:tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:Count</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:PINF</Key><Value>1</Value></Fmt><Fmt><Key>{W}Watch-2:Porog</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:datErrTmp</Key><Value>1</Value></Fmt><Fmt><Key>{W}Watch-2:datRegCurMax</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[0]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[1]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[2]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[3]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[4]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[5]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[6]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:dat[7]->tr</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:eventMassStep</Key><Value>3</Value></Fmt><Fmt><Key>{W}Watch-2:statFree</Key><Value>3</Value></Fmt></watch_formats>
         </Format>
         
         
         
         
-      <Column0>143</Column0><Column1>145</Column1><Column2>108</Column2><Column3>343</Column3></Watch>
-    </Static>
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Watch</Factory></Window><Window><Factory>QuickWatch</Factory></Window><Window><Factory>Auto</Factory></Window></Windows></PreferedWindows><Column0>212</Column0><Column1>145</Column1><Column2>108</Column2><Column3>343</Column3></Watch>
+    <QuickWatch><Column0>100</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Watch</Factory></Window><Window><Factory>Watch</Factory></Window><Window><Factory>Auto</Factory></Window></Windows></PreferedWindows></QuickWatch><TerminalIO><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><InputSource>1</InputSource><InputMode>10</InputMode><Filename>$PROJ_DIR$\TermIOInput.txt</Filename><InputEcho>1</InputEcho><ShowReset>0</ShowReset></TerminalIO><Auto><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Watch</Factory></Window><Window><Factory>QuickWatch</Factory></Window><Window><Factory>Watch</Factory></Window></Windows></PreferedWindows><Column0>100</Column0><Column1>150</Column1><Column2>134</Column2><Column3>229</Column3></Auto><Locals><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><Column0>100</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></Locals></Static>
     <Windows>
       
       
       
-    <Wnd0>
+    <Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-29992-5257</Identity>
@@ -62,7 +62,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd4>
         <Tabs>
           <Tab>
             <Identity>TabID-7972-5260</Identity>
@@ -74,40 +74,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd1><Wnd3>
-        <Tabs>
-          <Tab>
-            <Identity>TabID-26625-5525</Identity>
-            <TabName>Watch</TabName>
-            <Factory>Watch</Factory>
-            <Session>
-              <Expressions>
-                
-                
-              <Expression><Expression>massiveSend</Expression></Expression><Expression><Expression>lenSlitok</Expression></Expression><Expression><Expression>workSensor</Expression></Expression><Expression><Expression>timer_mass</Expression></Expression><Expression><Expression>indx</Expression></Expression><Expression><Expression>sensor</Expression></Expression><Expression><Expression>vg::rs_Dat[0]</Expression></Expression><Expression><Expression>dd</Expression></Expression><Expression><Expression>EventMassLen</Expression></Expression></Expressions>
-              
-              
-              
-              
-              
-            <TabId>0</TabId><Column0>143</Column0><Column1>145</Column1><Column2>108</Column2><Column3>343</Column3></Session>
-          </Tab>
-        </Tabs>
-        
-      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd1><Tabs><Tab><Identity>TabID-2575-10047</Identity><TabName>Watch</TabName><Factory>Watch</Factory><Session><Expressions><Expression><Expression>PINF</Expression></Expression><Expression><Expression>dat[0]->tr</Expression></Expression><Expression><Expression>dat[1]->tr</Expression></Expression><Expression><Expression>dat[2]->tr</Expression></Expression><Expression><Expression>dat[3]->tr</Expression></Expression><Expression><Expression>dat[4]->tr</Expression></Expression><Expression><Expression>dat[5]->tr</Expression></Expression><Expression><Expression>dat[6]->tr</Expression></Expression><Expression><Expression>dat[7]->tr</Expression></Expression><Expression><Expression>statFree</Expression></Expression><Expression><Expression>ns_izmlen1::eventMassStep</Expression></Expression><Expression><Expression>eventMassStep</Expression></Expression><Expression><Expression>outDacCount</Expression></Expression><Expression><Expression>Porog</Expression></Expression><Expression><Expression>Count</Expression></Expression><Expression><Expression>datTime</Expression></Expression><Expression><Expression>datTimeMassive</Expression></Expression><Expression><Expression>datWorkTmp</Expression></Expression><Expression><Expression>datRegCurMax</Expression></Expression><Expression><Expression>datErrTmp</Expression></Expression><Expression><Expression>datFlagEvent</Expression></Expression><Expression><Expression>n</Expression></Expression></Expressions><TabId>2</TabId><Column0>212</Column0><Column1>145</Column1><Column2>108</Column2><Column3>343</Column3></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>97</SelStart><SelEnd>101</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len.cpp</Filename><XPos>0</XPos><YPos>81</YPos><SelStart>3992</SelStart><SelEnd>3992</SelEnd></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\main.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>73</SelStart><SelEnd>73</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\main.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>335</SelStart><SelEnd>335</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\Configure.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>698</SelStart><SelEnd>710</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\OutDebug.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>319</SelStart><SelEnd>319</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\OutDebug.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>267</SelStart><SelEnd>267</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\Variable.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>325</SelStart><SelEnd>354</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\variable.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>452</SelStart><SelEnd>458</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\crc.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>68</SelStart><SelEnd>68</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\crc.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>103</SelStart><SelEnd>111</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\rs232.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>127</SelStart><SelEnd>136</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\rs232.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>630</SelStart><SelEnd>630</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\menu.cpp</Filename><XPos>0</XPos><YPos>123</YPos><SelStart>6754</SelStart><SelEnd>6754</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\key4.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>46</SelStart><SelEnd>46</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\lcd.cpp</Filename><XPos>0</XPos><YPos>233</YPos><SelStart>6389</SelStart><SelEnd>6389</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\lcd.h</Filename><XPos>0</XPos><YPos>22</YPos><SelStart>98</SelStart><SelEnd>108</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\key4.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\Object.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>91</SelStart><SelEnd>91</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\InitSystem.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>377</SelStart><SelEnd>377</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>152</SelStart><SelEnd>219</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>40</SelStart><SelEnd>278</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len1.h</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>291</SelStart><SelEnd>301</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\izm_len1.cpp</Filename><XPos>0</XPos><YPos>122</YPos><SelStart>4731</SelStart><SelEnd>4731</SelEnd></Tab><ActiveTab>3</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\main.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>617</SelStart><SelEnd>617</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\Variable.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>77</SelStart><SelEnd>77</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\variable.h</Filename><XPos>0</XPos><YPos>3</YPos><SelStart>342</SelStart><SelEnd>342</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\InitSystem.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>413</SelStart><SelEnd>413</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\menu.cpp</Filename><XPos>0</XPos><YPos>197</YPos><SelStart>9146</SelStart><SelEnd>9154</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\Object.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>103</SelStart><SelEnd>103</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\watchdog.cpp</Filename><XPos>0</XPos><YPos>40</YPos><SelStart>1509</SelStart><SelEnd>1509</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\main.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>557</SelStart><SelEnd>557</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\key4.cpp</Filename><XPos>0</XPos><YPos>125</YPos><SelStart>3778</SelStart><SelEnd>3778</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\ports1.cpp</Filename><XPos>0</XPos><YPos>129</YPos><SelStart>6585</SelStart><SelEnd>6585</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\ports1.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>549</SelStart><SelEnd>584</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\dac_ad420.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>523</SelStart><SelEnd>523</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>D:\GitHub\t1_hot_IzmLenSlitkov\code\system\DisplayTimer.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>488</SelStart><SelEnd>488</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-01e405c0><key>iaridepm.enu1</key></Toolbar-01e405c0></Sizes></Row0><Row1><Sizes><Toolbar-05025e68><key>debuggergui.enu1</key></Toolbar-05025e68></Sizes></Row1></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>850</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>179051</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>762757</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>850</Bottom><Right>591</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>179051</sizeHorzCY><sizeVertCX>308854</sizeVertCX><sizeVertCY>762757</sizeVertCY></Rect></Wnd3></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>179051</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>179051</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0129ec68><key>iaridepm.enu1</key></Toolbar-0129ec68></Sizes></Row0><Row1><Sizes><Toolbar-06436a50><key>debuggergui.enu1</key></Toolbar-06436a50></Sizes></Row1></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>851</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>762970</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>851</Bottom><Right>589</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>104167</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>307813</sizeVertCX><sizeVertCY>762970</sizeVertCY></Rect></Wnd1></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>178891</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>178891</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

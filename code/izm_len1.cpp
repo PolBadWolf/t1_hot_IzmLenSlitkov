@@ -5,16 +5,15 @@
 #define PortWarningPORT     PORTE_PORTE5
 
 #define nDat 8
-#define nDatMask ((1<<nDat)-1)
+//#define nDatMask ((1<<nDat)-1)
 
 namespace ns_izmlen1
 {
     // tmp null function
-    unsigned char ReadStep(){return 3;}
-    bool SensorNewDate = true;
     bool flNewLen = true;
-    unsigned int NewLen = true;
+    unsigned int NewLen;
     unsigned char ErrWorkDat = 0;
+    unsigned long lenRender;
     // massive sensors / 0 - sensor show hot tube, 1 - sensor not view /
     tc_ports1<izmLen_DatType> *dat[nDat];
 #if (nDat<9)
@@ -22,20 +21,28 @@ namespace ns_izmlen1
     unsigned char datFlagEvent;
     // tmp summ err dat 
     unsigned char datErrTmp;
+    // temp cur work dat
+    unsigned char datWorkTmp;
 #elif (nDat<17)
     // bits flag events from sensors
     unsigned int  datFlagEvent;
     // tmp summ err dat 
     unsigned int  datErrTmp;
+    // temp cur work dat
+    unsigned int  datWorkTmp;
 #else
     // bits flag events from sensors
     unsigned long datFlagEvent;
     // tmp summ err dat 
     unsigned long datErrTmp;
+    // temp cur work dat
+    unsigned long datWorkTmp;
 #endif
     // time massive
     unsigned long datTimeMassive[nDat][2];
     unsigned long datTime;
+    unsigned char datTimeFlagReg = 0;
+      signed char datRegCurMax = -1;
     // =========================================================================
     void Event1(unsigned char level, unsigned char tag);
     void Event2(unsigned char level, unsigned char tag);
@@ -58,22 +65,34 @@ namespace ns_izmlen1
 #define izmSensorsTimeOut 180000
     void IzmBeginTimer();
     void WaitEndIzmTimer();
+    void WaitEndIzmMain();
     // =========================================================================
+    unsigned char eventMassStep;
     void Empty() {}
+    void EmptyNext() {eventMassStep++;}
     void WarningEnabled();
     void WarningDisabled();
+    unsigned char CheckFreeSensors();
+    // =========================================================================
+    void IzmRenderMain();
+    // =========================================================================
+    unsigned int outDacCount;
+#define outDacCountMax 5000
+    void InitOutDacMain();
+    void WaitEndOutDacTimer();
     // =========================================================================
     // =========================================================================
     // =========================================================================
-    unsigned char eventMassStep = 0;
 #define EvMain      0
 #define EvTimer     1
     void (* const flash EventMass[][2])() = 
     {
+#define InitOutDac                  0
     // init out dac
-         {Empty                     ,Empty}
+         {InitOutDacMain            ,Empty}
+#define WaitEndOutDac               1
     // wait end out dac
-        ,{Empty                     ,Empty}
+        ,{Empty                     ,WaitEndOutDacTimer}
 #define InitWaitFreeSensors         2
         // init wait free sensors
         ,{InitWaitFreeSensorsMain   ,Empty}
@@ -85,8 +104,9 @@ namespace ns_izmlen1
         ,{Empty                     ,IzmBeginTimer}
 #define WaitEndIzm                  5
         // wait end izm
-        ,{Empty                     ,WaitEndIzmTimer}
-        ,{Empty                     ,Empty}
+        ,{WaitEndIzmMain            ,WaitEndIzmTimer}
+#define IzmRender                   6
+        ,{IzmRenderMain             ,Empty}
         ,{Empty                     ,Empty}
         ,{Empty                     ,Empty}
         ,{Empty                     ,Empty}
@@ -94,13 +114,27 @@ namespace ns_izmlen1
         ,{Empty                     ,Empty}
     };
     // =========================================================================
+    void SensorNewDateReset()
+    {
+        CritSec cs_sens;
+        datFlagEvent = 0;
+    }
     inline void ScanSensors()
     {
-        datFlagEvent = 0;
+        SensorNewDateReset();
         for (unsigned char n=0; n<nDat; n++)
         {
             dat[n]->for_timer();
         }
+    }
+    unsigned char SensorNewDate()
+    {
+        unsigned char st;
+        {
+            CritSec cs_sens;
+            st = datFlagEvent;
+        }
+        return st;
     }
     // =========================================================================
     void for_timer()
@@ -117,17 +151,44 @@ namespace ns_izmlen1
     {
         {
             CritSec cs_event;
+            //debug
+            for_timer();
+            //
             EventMass[eventMassStep][EvMain]();
+            NewLen = lenRender;
+            ErrWorkDat = datErrTmp;
         }
     }
+    unsigned char ReadStep()
+    {
+        unsigned char step;
+        {
+            CritSec cs_event;
+            step = eventMassStep;
+        }
+        return step;
+    }
+
     // =========================================================================
     void Event1(unsigned char level, unsigned char tag)
     {
-        if (datTimeMassive[tag][level]==0)
-        {   // free cell
-            datTimeMassive[tag][level] = datTime;
-        }
+        // set event sensor
         datFlagEvent |= 1<<tag;
+        if (datTimeFlagReg)
+        {
+            // reg time event sensor
+            if (datTimeMassive[tag][level]==0)
+            {   // free cell
+                datTimeMassive[tag][level] = datTime;
+            }
+            // mask working sensors
+            datWorkTmp |= (1<<tag);
+            // curent max number sensor
+            if (datRegCurMax<tag)
+            {
+                datRegCurMax = tag;
+            }
+        }
     }
     void Event2(unsigned char level, unsigned char tag)
     {
@@ -144,12 +205,7 @@ namespace ns_izmlen1
     // =========================================================================
     void WaitFreeSensorsMain()
     {
-        unsigned char stat = 0;
-        for (unsigned char n=0; n<nDat; n++)
-        {   // summ status sensors
-            stat |= (!dat[n]->level())<<n;
-        }
-        if (stat==0)
+        if (CheckFreeSensors()!=0)
         {   // sensors free
             WarningDisabled();
             // reset time massive
@@ -160,7 +216,14 @@ namespace ns_izmlen1
                     datTimeMassive[n][l] = 0;
                 }
             }
+            // count time;
             datTime = 1;
+            // reset cur work sensors
+            datWorkTmp = 0;
+            // unreg cur max number sensor
+            datRegCurMax = -1;
+            // reg time event sensor On
+            datTimeFlagReg = 1;
             // begin izm
             eventMassStep = IzmBegin;
             return;
@@ -182,31 +245,328 @@ namespace ns_izmlen1
     {
         if (datFlagEvent)
         {   // begin izm
-            datErrTmp = (1<<8)-1;
-            datErrTmp &= (~datFlagEvent) & nDatMask;
+            // reg err sensors
+            datErrTmp = ((1<<(datRegCurMax+1))-1) & (~datWorkTmp);
             // wait end izm
             eventMassStep = WaitEndIzm;
         }
     }
     void WaitEndIzmTimer()
     {
-        datTime++;
-        /*
-        if (izmSensorsTime<izmSensorsTimeOut)
+        if (datTime<izmSensorsTimeOut)
         {
-            izmSensorsTime--;
+            datTime++;
+            // wait free sensors
+            if (CheckFreeSensors()!=0)
+            {   // end !!!!
+                eventMassStep = IzmRender;
+                // reg time event sensor Off
+                datTimeFlagReg = 0;
+            }
         }
         else
         {   // timeout
+            // error - reset izmer & 
+            datTimeFlagReg = 0;
+            WarningEnabled();
+            eventMassStep = InitWaitFreeSensors;
         }
-        */
+    }
+    void WaitEndIzmMain()
+    {
+        if (datFlagEvent)
+        {
+            datErrTmp = ((1<<(datRegCurMax+1))-1) & (~datWorkTmp);
+        }
+        else
+        {
+            datErrTmp = 0;
+        }
+    }
+    // =========================================================================
+            struct st_mss
+            {
+                unsigned char napr;
+                unsigned char fist;
+                unsigned char next;
+                unsigned long dochet;
+            };
+        st_mss mss[36];
+        unsigned char minNum;
+    void IzmRenderMain()
+    {
+        // max
+        signed char maxn = 0;
+        signed char map[nDat]; // nDat - all sensors (const)
+        // ========================
+        minNum = 255;
+        unsigned char mss_max = 0;
+        // ========================
+        // reset map
+        for(unsigned char i=0; i<nDat; i++)
+        {
+            map[i] = -1;
+        }
+        // init map
+        datErrTmp = 0;
+        for(unsigned char i=0; i<nDat; i++)
+        {
+            if (datTimeMassive[i][0]>0)
+            {
+                map[maxn] = i;
+                maxn++;
+            }
+            else
+            {
+                datErrTmp |= 1<<i;
+            }
+        }
+        // 
+        if (maxn<3)
+        {   // all bad
+            WarningEnabled();
+            eventMassStep = InitWaitFreeSensors;
+        }
+        else
+        {   // find soulions
+            mss_max = 0;
+            // write massive adding
+            for (unsigned char sd=0; sd<(maxn-2); sd++)
+            {
+                for (unsigned char su=(sd+1); su<maxn; su++)
+                {
+                    if ( datTimeMassive[map[sd]][1]<=datTimeMassive[map[su]][0] )
+                    {   // find zone
+                        // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0]
+                        mss[mss_max].napr = 1;
+                        mss[mss_max].fist = sd;
+                        mss[mss_max].next = su-1;
+                        mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0];
+                        mss_max++;
+                        // sd : - : datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1]
+                        mss[mss_max].napr = 2;
+                        mss[mss_max].fist = sd;
+                        mss[mss_max].next = su;
+                        mss[mss_max].dochet = datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1];
+                        mss_max++;
+                    }
+                    else
+                    {
+                        if ( su==(maxn-1) )
+                        {   // end sensor
+                            // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0]
+                            mss[mss_max].napr = 0;
+                            mss[mss_max].fist = sd;
+                            mss[mss_max].next = su;
+                            mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0];
+                            mss_max++;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+            // select min adding
+            unsigned long minTime;
+            minTime = mss[(mss_max-1)].dochet;
+            minNum  = (mss_max-1);
+            unsigned long base, speedLen, speedLen1, speedTime;
+            for (signed char i=(mss_max-1); i>=0; i--)
+            {
+                if ( minTime>mss[i].dochet )
+                {
+                    minTime = mss[i].dochet;
+                    minNum = i;
+                }
+            }
+            // render
+            base = vg::rs_Dat[map[mss[minNum].next]]-vg::rs_Dat[map[mss[minNum].fist]];
+            if (mss[minNum].napr==0)
+            {   // big tube
+                speedLen  =     vg::rs_Dat[map[mss[minNum].next]]    -     vg::rs_Dat[map[mss[minNum].next-1]];
+                speedLen1 =     vg::rs_Dat[map[mss[minNum].fist+1]]  -     vg::rs_Dat[map[mss[minNum].fist]];
+                if ( speedLen>speedLen1)
+                {
+                    speedLen = speedLen1;
+                    speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
+                }
+                else
+                {
+                    speedTime = datTimeMassive[map[mss[minNum].next]][0] - datTimeMassive[map[mss[minNum].next-1]][0];
+                }
+                lenRender = base + speedLen*mss[minNum].dochet/speedTime;
+            }
+            if (mss[minNum].napr==1)
+            {   // normal tube doschit plus
+                speedLen  =     vg::rs_Dat[map[mss[minNum].next+1]]  -     vg::rs_Dat[map[mss[minNum].next]];
+                speedLen1 =     vg::rs_Dat[map[mss[minNum].fist+1]]  -     vg::rs_Dat[map[mss[minNum].fist]];
+                if ( speedLen>speedLen1)
+                {
+                    speedLen = speedLen1;
+                    speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
+                }
+                else
+                {
+                    speedTime = datTimeMassive[map[mss[minNum].next+1]][0] - datTimeMassive[map[mss[minNum].next]][0];
+                }
+                lenRender = base + speedLen*mss[minNum].dochet/speedTime;
+            }
+            if (mss[minNum].napr==2)
+            {   // normal tube doschit minus
+                speedLen  =     vg::rs_Dat[map[mss[minNum].next]]    -     vg::rs_Dat[map[mss[minNum].next-1]];
+                speedLen1 =     vg::rs_Dat[map[mss[minNum].fist+1]]  -     vg::rs_Dat[map[mss[minNum].fist]];
+                if ( speedLen>speedLen1)
+                {
+                    speedLen = speedLen1;
+                    speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
+                }
+                else
+                {
+                    speedTime = datTimeMassive[map[mss[minNum].next]][0] - datTimeMassive[map[mss[minNum].next-1]][0];
+                }
+                lenRender = base - speedLen*mss[minNum].dochet/speedTime;
+                flNewLen = true;
+            }
+            // === END RENDER - OUT : lenRender=================================
+            eventMassStep = InitOutDac;
+        }
+        // =========
+        // send to rs debug info
+        void SendDebug();
+        SendDebug();
+    }
+    void SendDebug()
+    {
+        unsigned char IdxLen;
+        const unsigned char massSendLen = 
+              sizeof(unsigned char) // 0xe6
+            + sizeof(unsigned char) // code
+            + sizeof(unsigned char) // len
+            + sizeof(unsigned int)  // 0x55aa
+            + sizeof(datErrTmp)
+            + sizeof(lenRender)
+            + sizeof(vg::rs_Dat)
+            + sizeof(datTimeMassive)
+            + sizeof(unsigned int)  // 0xaa55
+            + sizeof(minNum)        // cur trio
+            + sizeof(st_mss)        // cur trio
+            + sizeof(unsigned char) // crc
+            ;
+            unsigned char massSend[massSendLen];
+            unsigned char massSendIdx = 0;
+        massSend[massSendIdx++] = 0xe6;
+        massSend[massSendIdx++] = 0x0c; // code
+        IdxLen = massSendIdx;
+        massSend[massSendIdx++] = 0x00; // len
+        massSend[massSendIdx++] = 0xaa; // aa
+        massSend[massSendIdx++] = 0x55; // 55
+        massSend[massSendIdx++] = datErrTmp;
+        // lenRender
+        for (unsigned char b=0; b<sizeof(lenRender); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&lenRender)[b]; 
+        }
+        // vg::rs_Dat
+        for (unsigned char n=0; n<(sizeof(vg::rs_Dat)/sizeof(vg::rs_Dat[0])); n++)
+        {
+            for (unsigned char b=0; b<sizeof(vg::rs_Dat[0]); b++)
+            {
+                massSend[massSendIdx++] = ((unsigned char *)&vg::rs_Dat[n])[b];
+            }
+        }
+        // datTimeMassive
+        for (unsigned char l=0; l<2; l++)
+        {
+            for (unsigned char n=0; n<(sizeof(datTimeMassive)/(sizeof(datTimeMassive[0][0])*2)); n++)
+            {
+                for (unsigned char b=0; b<sizeof(datTimeMassive[0][0]); b++)
+                {
+                    massSend[massSendIdx++] = ((unsigned char *)&datTimeMassive[n][l])[b];
+                }
+            }
+        }
+        massSend[massSendIdx++] = 0x55; // 55
+        massSend[massSendIdx++] = 0xaa; // aa
+        // minNum
+        for (unsigned char b=0; b<sizeof(minNum); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&minNum)[b]; 
+        }
+        // mss[minNum].napr
+        for (unsigned char b=0; b<sizeof(mss[minNum].napr); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].napr)[b]; 
+        }
+        // mss[minNum].fist
+        for (unsigned char b=0; b<sizeof(mss[minNum].fist); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].fist)[b]; 
+        }
+        // mss[minNum].next
+        for (unsigned char b=0; b<sizeof(mss[minNum].next); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].next)[b]; 
+        }
+        // mss[minNum].dochet
+        for (unsigned char b=0; b<sizeof(mss[minNum].dochet); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].dochet)[b]; 
+        }
+        // crc
+        massSend[massSendIdx] = crc8_buf(massSend, massSendIdx);
+        massSendIdx++;
+        massSend[IdxLen] = massSendIdx;
+        // ============ SEND ================
+        if (massSendIdx==massSendLen)
+        {
+            for (unsigned char i=0;i<massSendIdx; i++)
+                PortForDebug::WriteByte(massSend[i]);
+        }
+        else
+        {
+            unsigned char sss[] = "Error module send\r\n";
+            unsigned char l = sizeof(sss);
+            for (unsigned char i=0;i<l; i++)
+                PortForDebug::WriteByte(sss[i]);
+        }
+    }
+    // =========================================================================
+    void InitOutDacMain()
+    {
+        // настройка и выдача нуля по токову интерфесу
+        ad420_Init();
+        ad420_SwapWord(lenRender*4);
+        outDacCount = outDacCountMax;
+        eventMassStep = WaitEndOutDac;
+    }
+    void WaitEndOutDacTimer()
+    {
+        if (outDacCount>0)
+        {
+            outDacCount--;
+        }
+        else
+        {
+            ad420_Init();
+            ad420_SwapWord(0);
+            eventMassStep = InitWaitFreeSensors;
+        }
     }
     // =========================================================================
     // =========================================================================
     // =========================================================================
     // =========================================================================
-    // =========================================================================
-    // =========================================================================
+    unsigned char CheckFreeSensors()
+    {
+        unsigned char statFree = 1;
+        for (unsigned char n=0; n<nDat; n++)
+        {   // summ status sensors : 0 - hot, 1 - free
+            statFree &= dat[n]->level();
+        }
+        return statFree;
+    }
     // =========================================================================
     void WarningEnabled()
     {
@@ -229,8 +589,12 @@ namespace ns_izmlen1
         dat[3] = new tc_ports1<izmLen_DatType>('f', 3, izmLen_DatPorog, Event1, 3);
         dat[4] = new tc_ports1<izmLen_DatType>('f', 4, izmLen_DatPorog, Event1, 4);
         dat[5] = new tc_ports1<izmLen_DatType>('f', 5, izmLen_DatPorog, Event1, 5);
-        dat[6] = new tc_ports1<izmLen_DatType>('f', 4, izmLen_DatPorog, Event1, 6);
-        dat[7] = new tc_ports1<izmLen_DatType>('f', 5, izmLen_DatPorog, Event1, 7);
+        dat[6] = new tc_ports1<izmLen_DatType>('f', 6, izmLen_DatPorog, Event1, 6);
+        dat[7] = new tc_ports1<izmLen_DatType>('f', 7, izmLen_DatPorog, Event1, 7);
+        eventMassStep = 0;
+        // настройка и выдача нуля по токову интерфесу
+        ad420_Init();
+        ad420_SwapWord(0);
     }
     // =========================================================================
 }

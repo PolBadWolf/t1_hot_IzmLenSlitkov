@@ -63,7 +63,7 @@
         </option>
         <option>
           <name>SCCStackSize</name>
-          <state>0x60</state>
+          <state>0x100</state>
         </option>
         <option>
           <name>SCExtCStack</name>
@@ -188,7 +188,7 @@
         </option>
         <option>
           <name>LCNearHeapSize</name>
-          <state>0x400</state>
+          <state>0x500</state>
         </option>
         <option>
           <name>LCFarHeapSize</name>
@@ -343,7 +343,7 @@
         <option>
           <name>CCCrossCallPassesList</name>
           <version>8</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCObjUseModuleName</name>
@@ -2017,9 +2017,6 @@
   </file>
   <file>
     <name>$PROJ_DIR$\Object.cpp</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\OutDebug.cpp</name>
   </file>
   <file>
     <name>$PROJ_DIR$\UserTimer.cpp</name>

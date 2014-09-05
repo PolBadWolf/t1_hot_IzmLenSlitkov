@@ -1,13 +1,20 @@
 
 #include "main.h"
 
+namespace ns_izmlen1
+{
+    unsigned char CheckFreeSensors();
+}
+
 void main(void)
 {
-  {
+    {
     void InitSystem(void);
     InitSystem();
   }
-  scr->F_Digit_uz( (unsigned char)0, (unsigned char)4, (unsigned int)1234);
+    ns_izmlen1::CheckFreeSensors();
+  _delay_ms(1000);
+//  scr->F_Digit_uz( (unsigned char)0, (unsigned char)4, (unsigned int)1234);
   __enable_interrupt();
   _delay_ms(1000);
   scr->LoadSymbol();

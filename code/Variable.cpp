@@ -9,7 +9,7 @@ namespace vg
   }
   // =====================================
 //  __eeprom TDateSmena ee_Archiv[ee_ArchivLen] = {0};
-  __eeprom unsigned int rs_Dat[6] = {0, 1000, 2000, 3000, 4000, 5000};
+  __eeprom unsigned int rs_Dat[8] = {1000, 2000, 3000, 4000, 5000, 6000, 10350, 10860};
   unsigned int rs_slitok_len = 2500;
   unsigned int rs_slitok_speed = 100;
   __eeprom unsigned char kf_usr = 20;

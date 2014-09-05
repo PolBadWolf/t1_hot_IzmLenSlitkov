@@ -10,8 +10,7 @@
 //  512 = 0.45s
 // 1024 = 0.9s
 // 2048 = 1.8s
-#define WDP_SCA 1024
-
+#define WDP_SCA 2048
 #if (WDP_SCA==16)
 #define WDP_0 0
 #define WDP_1 0

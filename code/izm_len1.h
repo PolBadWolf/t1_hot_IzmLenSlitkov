@@ -16,10 +16,16 @@
 namespace ns_izmlen1
 {
     // tmp null function
-    extern unsigned char ReadStep();
-    extern bool SensorNewDate;
+    //ok
+    unsigned char ReadStep();
+    // ok
+    unsigned char SensorNewDate();
+    void SensorNewDateReset();
+    // ok
     extern bool flNewLen;
+    // ok
     extern unsigned int NewLen;
+    //
     extern unsigned char ErrWorkDat;
     void init();
     void for_timer();

@@ -42,7 +42,7 @@ namespace ns_menu
   #define InputSetup_CurPswLen 5
   unsigned char InputSetup_CurPsw[InputSetup_CurPswLen];
   unsigned char InputSetup_CurPswInd;
-  unsigned char __eeprom PaswordE[InputSetup_CurPswLen] = { 1, 2, 3, 4, 5 };
+  unsigned char __eeprom PaswordE[InputSetup_CurPswLen] = { 0, 0, 0, 0, 0 };
   // ================================================================================================================
   void SetupError();
   void SetupError_v();
@@ -142,27 +142,27 @@ namespace ns_menu
   // ================================================================================================================
   void WaitWorkMode()
   {
-    for (unsigned char i=0; i<6; i++)
+    for (unsigned char i=0; i<8; i++)
     {
       if ( ns_izmlen::dat[i]->level() )
-        scr->Char(26 + i, ' ');
+        scr->Char(16+ 8+i, ' ');
       else
       {
         scr->Flash = 1;
-        scr->Char(26 + i, '0'+i+1);
+        scr->Char(16+ 8+i, '0'+i+1);
       }
-      scr->F_Char(10+i, !(bool)ns_izmlen::dat[i]->level() ); 
+      scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
     }
-    if ( ns_izmlen::ReadStep()==0 ) return;
-    if ( ns_izmlen::ReadStep()==1 ) return;
+    if ( ns_izmlen::ReadStep()==2 ) return;
+    if ( ns_izmlen::ReadStep()==3 ) return;
     Default();
   }
   // ================================================================================================================
-  char __flash Default_msg1[] = "Work mode ";
-  char __flash Default_msg2[] = "Len=      ";
-  char __flash Default_msg3[] = "Error     ";
-  char __flash Default_msg4[] = "Sensors : ";
-  char __flash Default_msg5[] = "Len=?           ";
+  char __flash Default_msg1[] = "Work            ";
+  char __flash Default_msg2[] = "L=              ";
+  char __flash Default_msg3[] = "Error           ";
+  char __flash Default_msg4[] = "Sensors :       ";
+  char __flash Default_msg5[] = "L=?             ";
   unsigned char DefaultFshow = 1;
   void Default()
   {
@@ -176,19 +176,19 @@ namespace ns_menu
     scr->F_String(0 , Default_msg1);
     DefaultFshow = 1;
     Default_v();
-    for (unsigned char i=0; i<6; i++)
+    for (unsigned char i=0; i<8; i++)
     {
-      scr->F_Char(10+i, !(bool)ns_izmlen::dat[i]->level() ); 
+      scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
     }
   }
   void Default_v()
   {
-    if ( ns_izmlen::SensorNewDate || DefaultFshow )
+    if ( ns_izmlen::SensorNewDate() || DefaultFshow )
     {
-      ns_izmlen::SensorNewDate = false;
-      for (unsigned char i=0; i<6; i++)
+      ns_izmlen::SensorNewDateReset();
+      for (unsigned char i=0; i<8; i++)
       {
-        scr->F_Char(10+i, !(bool)ns_izmlen::dat[i]->level() ); 
+        scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
       }
     }
     if ( ns_izmlen::flNewLen || DefaultFshow )
@@ -203,23 +203,23 @@ namespace ns_menu
       {
         scr->F_String(0 , Default_msg1);
         scr->F_String(16, Default_msg2);
-        scr->F_Char(16+4, '0'+(ns_izmlen::NewLen/1000) ); 
-        scr->F_Char(16+5, '.' ); 
-        scr->F_Digit_uz(16+6, 3, ns_izmlen::NewLen%1000 );
+        scr->F_Digit_u (16+2, 2, ns_izmlen::NewLen/1000 );
+        scr->F_Char(16+4, '.' ); 
+        scr->F_Digit_uz(16+5, 3, ns_izmlen::NewLen%1000 );
       }
         //scr->F_Char(16+5, '0'+ns_izmlen::nWorkDat );
-        for (unsigned char i=0; i<6; i++)
+        for (unsigned char i=0; i<8; i++)
         {
           if ( ns_izmlen::ErrWorkDat&(1<<i) )
           {
             scr->Flash = 1;
-            scr->Char(26+i, '0'+i+1 );
+            scr->Char(16+ 8+i, '0'+i+1 );
           }
           else
-            scr->Char(26+i, ' ' );
+            scr->Char(16+ 8+i, ' ' );
         }
     }
-    if (ns_izmlen::ReadStep()==4)
+    if (ns_izmlen::ReadStep()==5)
     {
         scr->F_String(16, Default_msg5);
     }
@@ -339,17 +339,19 @@ namespace ns_menu
     }
   }
   // ================================================================================================================
-#define SetupLen 8
+#define SetupLen 9
   char __flash SetupMenu_msg1[] = "Menu:";
   char __flash  SetupMenuList[SetupLen][17] = {
-    { "Distance to S1  " },
-    { "Distance to S2  " },
-    { "Distance to S3  " },
-    { "Distance to S4  " },
-    { "Distance to S5  " },
-    { "Distance to S6  " },
-    { "Set new password" },
-    { "Set K averaging " }
+     { "Distance to S1  " }
+    ,{ "Distance to S2  " }
+    ,{ "Distance to S3  " }
+    ,{ "Distance to S4  " }
+    ,{ "Distance to S5  " }
+    ,{ "Distance to S6  " }
+    ,{ "Distance to S7  " }
+    ,{ "Distance to S8  " }
+    ,{ "Set new password" }
+    //,{ "Set K averaging " }
   };
   void SetupMenu()
   {
@@ -390,17 +392,17 @@ namespace ns_menu
   }
   void SetupMenu_i()
   {
-    if (SetupMenuInd==6)
+    if (SetupMenuInd==8)
     {
       SetPassword();
       return;
     }
-    if (SetupMenuInd<6)
+    if (SetupMenuInd<8)
     {
       SetSensor();
       return;
     }
-    if (SetupMenuInd==7)
+    if (SetupMenuInd==9)
     {
       SetKoff();
       return;
@@ -505,7 +507,7 @@ namespace ns_menu
   {
     step = UkSetSensor;
     SetSensorDl = vg::rs_Dat[SetupMenuInd];
-    SetSensorInd = 3;
+    SetSensorInd = 4;
     scr->Clear();
     scr->F_String(0 , SetSensor_msg1 );
     scr->Char(13, '1'+SetupMenuInd );
@@ -520,9 +522,9 @@ namespace ns_menu
   {
     unsigned int  temp1 = SetSensorDl;
     unsigned char temp2, n;
-    for (unsigned char i=0; i<4; i++)
+    for (unsigned char i=0; i<5; i++)
     {
-      n = 3-i;
+      n = 4-i;
       temp2 = temp1 %10;
       if (SetSensorInd==i)
       {
