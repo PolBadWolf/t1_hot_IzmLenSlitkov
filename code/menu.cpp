@@ -769,10 +769,31 @@ namespace ns_izmlen
         {
             signed long dTime;
             unsigned long len, speed;
-            for (unsigned char i=1; i<6;i++)
+            unsigned char nach = 1;
+            for (unsigned char i=nach; i<6;i++)
             {
                 dTime = ns_izmlen::datTimeMassive[i][1]-ns_izmlen::datTimeMassive[i-1][1];
-                unsigned char p = 16 + (i-1)*3;
+                unsigned char p = 16 + (i-nach)*3;
+                if (dTime<=0)
+                {
+                    scr->F_Char(p+0, ' ' );
+                    scr->F_Char(p+1, '-' );
+                    scr->F_Char(p+2, '-' );
+                }
+                else
+                {
+                    len = vg::rs_Dat[i]-vg::rs_Dat[i-1];
+                    speed = len*100/dTime;
+                    scr->F_Char(p+0, ' ' );
+                    scr->F_Char(p+1, '0'+(speed/10)%10 );
+                    scr->F_Char(p+2, '0'+(speed%10) );
+                }
+            }
+            nach = 5;
+            for (unsigned char i=nach; i<8;i++)
+            {
+                dTime = ns_izmlen::datTimeMassive[i][0]-ns_izmlen::datTimeMassive[i-1][0];
+                unsigned char p = 6 + (i-nach)*3;
                 if (dTime<=0)
                 {
                     scr->F_Char(p+0, ' ' );
