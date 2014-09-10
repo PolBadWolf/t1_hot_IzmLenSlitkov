@@ -62,7 +62,8 @@ namespace ns_izmlen1
     void WaitFreeSensorsMain();
     void WaitFreeSensorsTimer();
     // =========================================================================
-#define izmSensorsTimeOut 60000
+#define izmSensorsTimeOutMax 5000
+    unsigned int izmSensorsTimeOut = izmSensorsTimeOutMax;
     void IzmBeginTimer();
     void WaitEndIzmTimer();
     void WaitEndIzmMain();
@@ -181,6 +182,10 @@ namespace ns_izmlen1
             {
                 ok = true;
             }
+            if ( (level==1) && (tag==0) )
+            {
+                ok = true;
+            }
             if ( (level==1) && (tag>0) )
             {
                 if (blockEvent[tag-1])
@@ -190,6 +195,7 @@ namespace ns_izmlen1
             }
             if (ok)
             {
+                izmSensorsTimeOut = izmSensorsTimeOutMax;
                 // reg time event sensor
                 datTimeMassive[tag][level] = datTime;
                 // mask working sensors
@@ -266,8 +272,9 @@ namespace ns_izmlen1
     }
     void WaitEndIzmTimer()
     {
-        if (datTime<izmSensorsTimeOut)
+        if (izmSensorsTimeOut>0)
         {
+            izmSensorsTimeOut--;
             datTime++;
             // wait free sensors
             if (CheckFreeSensors()!=0)
