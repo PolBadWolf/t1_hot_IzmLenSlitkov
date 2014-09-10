@@ -62,10 +62,11 @@ namespace ns_izmlen1
     void WaitFreeSensorsMain();
     void WaitFreeSensorsTimer();
     // =========================================================================
-#define izmSensorsTimeOut 180000
+#define izmSensorsTimeOut 60000
     void IzmBeginTimer();
     void WaitEndIzmTimer();
     void WaitEndIzmMain();
+    unsigned char waitEndIzmOk;
     // =========================================================================
     unsigned char eventMassStep;
     void Empty() {}
@@ -151,9 +152,6 @@ namespace ns_izmlen1
     {
         {
             CritSec cs_event;
-            //debug
-            for_timer();
-            //
             EventMass[eventMassStep][EvMain]();
             NewLen = lenRender;
             ErrWorkDat = datErrTmp;
@@ -168,25 +166,39 @@ namespace ns_izmlen1
         }
         return step;
     }
-
+    unsigned char blockEvent[8] = {3,3,3,3,3,3,3,3};
     // =========================================================================
     void Event1(unsigned char level, unsigned char tag)
     {
         // set event sensor
         datFlagEvent |= 1<<tag;
+        //
+        blockEvent[tag] = level;
         if (datTimeFlagReg)
         {
-            // reg time event sensor
-            if (datTimeMassive[tag][level]==0)
-            {   // free cell
-                datTimeMassive[tag][level] = datTime;
-            }
-            // mask working sensors
-            datWorkTmp |= (1<<tag);
-            // curent max number sensor
-            if (datRegCurMax<tag)
+            bool ok = false;
+            if ( (datTimeMassive[tag][level]==0) && (level==0) )
             {
-                datRegCurMax = tag;
+                ok = true;
+            }
+            if ( (level==1) && (tag>0) )
+            {
+                if (blockEvent[tag-1])
+                {
+                    ok = true;
+                }
+            }
+            if (ok)
+            {
+                // reg time event sensor
+                datTimeMassive[tag][level] = datTime;
+                // mask working sensors
+                datWorkTmp |= (1<<tag);
+                // curent max number sensor
+                if (datRegCurMax<tag)
+                {
+                    datRegCurMax = tag;
+                }
             }
         }
     }
@@ -245,6 +257,7 @@ namespace ns_izmlen1
     {
         if (datFlagEvent)
         {   // begin izm
+            waitEndIzmOk = 0;
             // reg err sensors
             datErrTmp = ((1<<(datRegCurMax+1))-1) & (~datWorkTmp);
             // wait end izm
@@ -258,18 +271,33 @@ namespace ns_izmlen1
             datTime++;
             // wait free sensors
             if (CheckFreeSensors()!=0)
-            {   // end !!!!
+            {   // sensor free
+                waitEndIzmOk = 1;
+                if ( (datTimeMassive[6][0]!=0) && (datTimeMassive[7][0]!=0) )
+                {
+                // end !!!!
                 eventMassStep = IzmRender;
                 // reg time event sensor Off
                 datTimeFlagReg = 0;
+                }
             }
         }
         else
         {   // timeout
-            // error - reset izmer & 
-            datTimeFlagReg = 0;
-            WarningEnabled();
-            eventMassStep = InitWaitFreeSensors;
+            if (waitEndIzmOk)
+            {
+                // end !!!!
+                eventMassStep = IzmRender;
+                // reg time event sensor Off
+                datTimeFlagReg = 0;
+            }
+            else
+            {
+                // error - reset izmer & 
+                datTimeFlagReg = 0;
+                WarningEnabled();
+                eventMassStep = InitWaitFreeSensors;
+            }
         }
     }
     void WaitEndIzmMain()
@@ -326,6 +354,8 @@ namespace ns_izmlen1
         {   // all bad
             WarningEnabled();
             eventMassStep = InitWaitFreeSensors;
+            lenRender=10;
+            flNewLen = true;
         }
         else
         {   // find soulions
@@ -383,6 +413,9 @@ namespace ns_izmlen1
             }
             // render
             base = vg::rs_Dat[map[mss[minNum].next]]-vg::rs_Dat[map[mss[minNum].fist]];
+            vg::teleMsg[0] = map[mss[minNum].fist] + '0';
+            vg::teleMsg[1] = map[mss[minNum].next] + '0';
+//                            mss[mss_max].dochetNext = map[sd];
             if (mss[minNum].napr==0)
             {   // big tube
                 speedLen  =     vg::rs_Dat[map[mss[minNum].next]]    -     vg::rs_Dat[map[mss[minNum].next-1]];
@@ -391,12 +424,18 @@ namespace ns_izmlen1
                 {
                     speedLen = speedLen1;
                     speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
+                    vg::teleMsg[3] = map[mss[minNum].fist]   + '0';
+                    vg::teleMsg[4] = map[mss[minNum].fist+1] + '0';
                 }
                 else
                 {
                     speedTime = datTimeMassive[map[mss[minNum].next]][0] - datTimeMassive[map[mss[minNum].next-1]][0];
+                    vg::teleMsg[3] = map[mss[minNum].next-1] + '0';
+                    vg::teleMsg[4] = map[mss[minNum].next]   + '0';
                 }
                 lenRender = base + speedLen*mss[minNum].dochet/speedTime;
+                flNewLen = true;
+                vg::teleMsg[2] = '+';
             }
             if (mss[minNum].napr==1)
             {   // normal tube doschit plus
@@ -406,12 +445,18 @@ namespace ns_izmlen1
                 {
                     speedLen = speedLen1;
                     speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
+                    vg::teleMsg[3] = map[mss[minNum].fist]   + '0';
+                    vg::teleMsg[4] = map[mss[minNum].fist+1] + '0';
                 }
                 else
                 {
                     speedTime = datTimeMassive[map[mss[minNum].next+1]][0] - datTimeMassive[map[mss[minNum].next]][0];
+                    vg::teleMsg[3] = map[mss[minNum].next]   + '0';
+                    vg::teleMsg[4] = map[mss[minNum].next+1] + '0';
                 }
                 lenRender = base + speedLen*mss[minNum].dochet/speedTime;
+                flNewLen = true;
+                vg::teleMsg[2] = '+';
             }
             if (mss[minNum].napr==2)
             {   // normal tube doschit minus
@@ -421,24 +466,32 @@ namespace ns_izmlen1
                 {
                     speedLen = speedLen1;
                     speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
+                    vg::teleMsg[3] = map[mss[minNum].fist]   + '0';
+                    vg::teleMsg[4] = map[mss[minNum].fist+1] + '0';
                 }
                 else
                 {
                     speedTime = datTimeMassive[map[mss[minNum].next]][0] - datTimeMassive[map[mss[minNum].next-1]][0];
+                    vg::teleMsg[3] = map[mss[minNum].next-1] + '0';
+                    vg::teleMsg[4] = map[mss[minNum].next]   + '0';
                 }
                 lenRender = base - speedLen*mss[minNum].dochet/speedTime;
                 flNewLen = true;
+                vg::teleMsg[2] = '-';
             }
             // === END RENDER - OUT : lenRender=================================
+            vg::teleMsg[5] = 0;
             eventMassStep = InitOutDac;
         }
         // =========
         // send to rs debug info
         void SendDebug();
         SendDebug();
+        flNewLen = true;
     }
     void SendDebug()
     {
+        const unsigned char simLen = 6;
         unsigned char IdxLen;
         const unsigned char massSendLen = 
               sizeof(unsigned char) // 0xe6
@@ -446,7 +499,8 @@ namespace ns_izmlen1
             + sizeof(unsigned char) // len
             + sizeof(unsigned int)  // 0x55aa
             + sizeof(datErrTmp)
-            + sizeof(lenRender)
+//            + sizeof(lenRender)
+            + simLen
             + sizeof(vg::rs_Dat)
             + sizeof(datTimeMassive)
             + sizeof(unsigned int)  // 0xaa55
@@ -464,16 +518,41 @@ namespace ns_izmlen1
         massSend[massSendIdx++] = 0x55; // 55
         massSend[massSendIdx++] = datErrTmp;
         // lenRender
+        /*
         for (unsigned char b=0; b<sizeof(lenRender); b++)
         {
             massSend[massSendIdx++] = ((unsigned char *)&lenRender)[b]; 
         }
+        */
+        
+        {
+            unsigned char lIdx = massSendIdx + simLen;
+            unsigned int xx = lenRender;
+            unsigned char xxtmp;
+            unsigned char xxi;
+            for (xxi=0; xxi<simLen; xxi++)
+            {
+                if ( xxi==(simLen-3) )
+                {
+                    massSend[lIdx-(xxi+1)] = '.';
+                }
+                else
+                {
+                    xxtmp = xx % 10;
+                    xx = xx / 10;
+                    massSend[lIdx-(xxi+1)] = xxtmp + '0';
+                }
+                massSendIdx++;
+            }
+        }
+        
         // vg::rs_Dat
         for (unsigned char n=0; n<(sizeof(vg::rs_Dat)/sizeof(vg::rs_Dat[0])); n++)
         {
-            for (unsigned char b=0; b<sizeof(vg::rs_Dat[0]); b++)
+            unsigned int tt = vg::rs_Dat[n];
+            for (unsigned char b=0; b<sizeof(tt); b++)
             {
-                massSend[massSendIdx++] = ((unsigned char *)&vg::rs_Dat[n])[b];
+                massSend[massSendIdx++] = ((unsigned char *)&tt)[b];
             }
         }
         // datTimeMassive
@@ -526,10 +605,50 @@ namespace ns_izmlen1
         }
         else
         {
-            unsigned char sss[] = "Error module send\r\n";
-            unsigned char l = sizeof(sss);
-            for (unsigned char i=0;i<l; i++)
-                PortForDebug::WriteByte(sss[i]);
+            {
+                unsigned char sss[] = "Error module send\r\n";
+                unsigned char l = sizeof(sss);
+                for (unsigned char i=0;i<l; i++)
+                    PortForDebug::WriteByte(sss[i]);
+            }
+            {
+                unsigned char sss[8];
+                unsigned char *s = sss;
+                *s = massSendIdx / 16;
+                if ( *s>9 )
+                    *s = *s-10+'A';
+                else
+                    *s = *s+'0';
+                s++;
+                *s = massSendIdx % 16;
+                if ( *s>9 )
+                    *s = *s-10+'A';
+                else
+                    *s = *s+'0';
+                s++;
+                *s = '!';
+                s++;
+                *s = '=';
+                s++;
+                *s = massSendLen / 16;
+                if ( *s>9 )
+                    *s = *s-10+'A';
+                else
+                    *s = *s+'0';
+                s++;
+                *s = massSendLen % 16;
+                if ( *s>9 )
+                    *s = *s-10+'A';
+                else
+                    *s = *s+'0';
+                s++;
+                *s = '\r';
+                s++;
+                *s = '\n';
+                unsigned char l = sizeof(sss);
+                for (unsigned char i=0;i<l; i++)
+                    PortForDebug::WriteByte(sss[i]);
+            }
         }
     }
     // =========================================================================

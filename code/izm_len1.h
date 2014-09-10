@@ -32,6 +32,7 @@ namespace ns_izmlen1
     void main();
     // massive sensors
     extern tc_ports1<unsigned char> *dat[];
+    extern unsigned long datTimeMassive[8][2];
 }
 
 #define ns_izmlen ns_izmlen1

@@ -80,16 +80,23 @@ namespace ns_menu
   void SetSensYn_zm();
   void SetSensYn_zp();
   // ================================================================================================================
+  /*
   void SetKoff();  
   void SetKoff_v();
   void SetKoff_m();
   void SetKoff_zm();
   void SetKoff_zp();
   void SetKoff_e();
+  */
   // ================================================================================================================
-    void SetKoffYn();
+/*
+  void SetKoffYn();
     void SetKoffYn_zm();
     void SetKoffYn_zp();
+  */
+  // ================================================================================================================
+    void DebugScrSpeed();
+    void DebugScrSpeed_v();
   // ================================================================================================================
   void FnVoid();
   // ================================================================================================================
@@ -115,11 +122,14 @@ namespace ns_menu
     { FnVoid            , SetSensor_m   , SetSensor_zm    , SetSensor_zp    , SetSensor_i     , ExitSetup       , SetSensor       },
 #define UkSetSensYn       9
     { FnVoid            , SetSensYn_m   , SetSensYn_zm    , SetSensYn_zp    , FnVoid          , ExitSetup       , SetSensYn       },
+    /*
 #define UkSetKoff         10
     { SetKoff_v         , SetKoff_m     , SetKoff_zm      , SetKoff_zp      , SetKoff_e       , ExitSetup       , SetKoff         },
 #define UkSetKoffYn       11
     { FnVoid            , FnVoid        , SetKoffYn_zm    , SetKoffYn_zp    , FnVoid          , ExitSetup       , SetKoffYn       },
-    { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          },
+    */
+#define UkDebugScrSpeed     10
+    { DebugScrSpeed_v   , Default       , FnVoid          , FnVoid          , FnVoid          , FnVoid          , DebugScrSpeed   },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          }
   };
@@ -153,15 +163,17 @@ namespace ns_menu
       }
       scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
     }
+    if ( ns_izmlen::ReadStep()==0 ) return;
+    if ( ns_izmlen::ReadStep()==1 ) return;
     if ( ns_izmlen::ReadStep()==2 ) return;
     if ( ns_izmlen::ReadStep()==3 ) return;
     Default();
   }
   // ================================================================================================================
-  char __flash Default_msg1[] = "Work            ";
-  char __flash Default_msg2[] = "L=              ";
-  char __flash Default_msg3[] = "Error           ";
-  char __flash Default_msg4[] = "Sensors :       ";
+  //char __flash Default_msg1[] = "Work    ";
+  char __flash Default_msg2[] = "L=      ";
+  char __flash Default_msg3[] = "Error   ";
+  char __flash Default_msg4[] = "Sensors:";
   char __flash Default_msg5[] = "L=?             ";
   unsigned char DefaultFshow = 1;
   void Default()
@@ -173,35 +185,50 @@ namespace ns_menu
     }
     scr->Clear();
     step = UkDefault;
-    scr->F_String(0 , Default_msg1);
+//    scr->F_String(0 , Default_msg1);
+    scr->F_String(0 , vg::teleMsg);
     DefaultFshow = 1;
     Default_v();
+    /*
     for (unsigned char i=0; i<8; i++)
     {
       scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
     }
+    */
   }
   void Default_v()
   {
-    if ( ns_izmlen::SensorNewDate() || DefaultFshow )
+    unsigned char flLocLen = 0, flLocSens = 0;
+    if (DefaultFshow)
     {
-      ns_izmlen::SensorNewDateReset();
-      for (unsigned char i=0; i<8; i++)
-      {
-        scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
-      }
+        flLocLen = 1;
+        flLocSens = 1;
     }
-    if ( ns_izmlen::flNewLen || DefaultFshow )
+    if ( ns_izmlen::flNewLen )
     {
-      ns_izmlen::flNewLen = false;
+        ns_izmlen::flNewLen = false;
+        flLocLen = 1;
+        flLocSens = 1;
+    }
+    if ( ns_izmlen::SensorNewDate() )
+    {
+        ns_izmlen::SensorNewDateReset();
+        flLocSens = 1;
+    }
+    // ============
+    if ( flLocLen )
+    {
+        /*
       if (ns_izmlen::NewLen==0 && !DefaultFshow )
       {
         scr->F_String(0 , Default_msg3);
         scr->F_String(16, Default_msg4);
       }
       else
+          */
       {
-        scr->F_String(0 , Default_msg1);
+        // scr->F_String(0 , Default_msg1);
+        scr->F_String(0 , vg::teleMsg);
         scr->F_String(16, Default_msg2);
         scr->F_Digit_u (16+2, 2, ns_izmlen::NewLen/1000 );
         scr->F_Char(16+4, '.' ); 
@@ -219,8 +246,17 @@ namespace ns_menu
             scr->Char(16+ 8+i, ' ' );
         }
     }
+    if ( flLocSens )
+    {
+      for (unsigned char i=0; i<8; i++)
+      {
+        scr->F_Char( 0+ 8+i, !(bool)ns_izmlen::dat[i]->level() ); 
+      }
+    }
     if (ns_izmlen::ReadStep()==5)
     {
+        //scr->F_String(0 , Default_msg1);
+        scr->F_String(0 , vg::teleMsg);
         scr->F_String(16, Default_msg5);
     }
     DefaultFshow = 0;
@@ -339,7 +375,7 @@ namespace ns_menu
     }
   }
   // ================================================================================================================
-#define SetupLen 9
+#define SetupLen 10
   char __flash SetupMenu_msg1[] = "Menu:";
   char __flash  SetupMenuList[SetupLen][17] = {
      { "Distance to S1  " }
@@ -351,6 +387,7 @@ namespace ns_menu
     ,{ "Distance to S7  " }
     ,{ "Distance to S8  " }
     ,{ "Set new password" }
+    ,{ "Debug scr speed " }
     //,{ "Set K averaging " }
   };
   void SetupMenu()
@@ -404,7 +441,7 @@ namespace ns_menu
     }
     if (SetupMenuInd==9)
     {
-      SetKoff();
+      DebugScrSpeed();
       return;
     }
   }
@@ -607,7 +644,8 @@ namespace ns_menu
     SetupMenu();
   }
 // ================================================================================================================
-    unsigned char koffTmp = 0;
+  /*  
+  unsigned char koffTmp = 0;
     char __flash SetKoff_msg1[] = "(V1+V2)/K  K=";
     char __flash SetKoff_msg2[] = "can.  -  + enter";
     char __flash SetKoff_msg3[] = "Save? (-/+)";
@@ -655,8 +693,10 @@ namespace ns_menu
   {
       SetKoffYn();
   }
+  */
   // ===============================================================================================================
-    void SetKoffYn()
+  /*  
+  void SetKoffYn()
     {
         step = UkSetKoffYn;
         scr->Clear();
@@ -677,7 +717,79 @@ namespace ns_menu
         vg::kf_usr = koffTmp;
         ExitSetup();
     }
+  */
   // ================================================================================================================
+    void DebugScrSpeed()
+    {
+        step = UkDebugScrSpeed;
+        {
+          CritSec cs;
+          timeout_max = 0;
+          timeout = timeout_max;
+        }
+        scr->Clear();
+        DefaultFshow = 1;
+        DebugScrSpeed_v();
+    }
+/*
+  // time massive
+namespace ns_izmlen
+{
+                extern unsigned long datTimeMassive[8][2];
+}
+*/
+    void DebugScrSpeed_v()
+    {
+        unsigned char flLocLen = 0, flLocSen = 0;
+        if (DefaultFshow)
+        {
+            flLocLen = 1;
+            flLocSen = 1;
+        }
+        if ( ns_izmlen::flNewLen )
+        {
+            ns_izmlen::flNewLen = false;
+            flLocLen = 1;
+            flLocSen = 1;
+        }
+        if ( ns_izmlen::SensorNewDate() )
+        {
+            flLocSen = 1;
+            ns_izmlen::SensorNewDateReset();
+        }
+        // ============
+        if ( flLocLen )
+        {
+            scr->F_Digit_u ( 0, 1, ns_izmlen::NewLen/1000 );
+            scr->F_Char(1, '.' ); 
+            scr->F_Digit_uz(2, 2, (ns_izmlen::NewLen%1000)/10 );
+        }
+        // ============
+        if ( flLocSen )
+        {
+            signed long dTime;
+            unsigned long len, speed;
+            for (unsigned char i=1; i<6;i++)
+            {
+                dTime = ns_izmlen::datTimeMassive[i][1]-ns_izmlen::datTimeMassive[i-1][1];
+                unsigned char p = 16 + (i-1)*3;
+                if (dTime<=0)
+                {
+                    scr->F_Char(p+0, ' ' );
+                    scr->F_Char(p+1, '-' );
+                    scr->F_Char(p+2, '-' );
+                }
+                else
+                {
+                    len = vg::rs_Dat[i]-vg::rs_Dat[i-1];
+                    speed = len*100/dTime;
+                    scr->F_Char(p+0, ' ' );
+                    scr->F_Char(p+1, '0'+(speed/10)%10 );
+                    scr->F_Char(p+2, '0'+(speed%10) );
+                }
+            }
+        }
+    }
   // ================================================================================================================
   // ================================================================================================================
   // ================================================================================================================

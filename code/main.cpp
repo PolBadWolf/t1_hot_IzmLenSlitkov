@@ -3,7 +3,7 @@
 
 namespace ns_izmlen1
 {
-    unsigned char CheckFreeSensors();
+    void SendDebug();
 }
 
 void main(void)
@@ -12,7 +12,7 @@ void main(void)
     void InitSystem(void);
     InitSystem();
   }
-    ns_izmlen1::CheckFreeSensors();
+    ns_izmlen1::SendDebug();
   _delay_ms(1000);
 //  scr->F_Digit_uz( (unsigned char)0, (unsigned char)4, (unsigned int)1234);
   __enable_interrupt();
