@@ -252,4 +252,11 @@ object Form1: TForm1
     Left = 304
     Top = 8
   end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = Timer1Timer
+    Left = 608
+    Top = 24
+  end
 end

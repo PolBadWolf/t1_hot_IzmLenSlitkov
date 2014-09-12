@@ -63,7 +63,7 @@
         </option>
         <option>
           <name>SCCStackSize</name>
-          <state>0x100</state>
+          <state>0x120</state>
         </option>
         <option>
           <name>SCExtCStack</name>
@@ -71,7 +71,7 @@
         </option>
         <option>
           <name>SCRStackSize</name>
-          <state>48</state>
+          <state>64</state>
         </option>
         <option>
           <name>SCExtRStack</name>

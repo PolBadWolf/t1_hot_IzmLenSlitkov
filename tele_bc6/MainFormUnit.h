@@ -42,9 +42,11 @@ __published:	// IDE-managed Components
         TEdit *Edit13;
         TEdit *Edit14;
         TLabel *Label1;
+        TTimer *Timer1;
         void __fastcall Button2Click(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
         void __fastcall TimerRenderTimer(TObject *Sender);
+        void __fastcall Timer1Timer(TObject *Sender);
 private:	// User declarations
         void __fastcall EventNewDateComPort(int RdByte);
         TShape *SensInd[8];

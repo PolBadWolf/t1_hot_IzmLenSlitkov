@@ -62,7 +62,7 @@ namespace ns_izmlen1
     void WaitFreeSensorsMain();
     void WaitFreeSensorsTimer();
     // =========================================================================
-#define izmSensorsTimeOutMax 5000
+#define izmSensorsTimeOutMax 15000
     unsigned int izmSensorsTimeOut = izmSensorsTimeOutMax;
     void IzmBeginTimer();
     void WaitEndIzmTimer();
@@ -326,7 +326,7 @@ namespace ns_izmlen1
                 unsigned char next;
                 unsigned long dochet;
             };
-        st_mss mss[36];
+        st_mss mss[100];
         unsigned char minNum;
     void IzmRenderMain()
     {

@@ -68,6 +68,7 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
                 comPort = NULL;
                 ShapeConnect->Brush->Color = clWindow;
         }
+        Timer1->Enabled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button1Click(TObject *Sender)
@@ -96,6 +97,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
                 ShowMessage("Ошибка открытия порта");
                 return;
         }
+//        Timer1->Enabled = true;
         ShapeConnect->Brush->Color = clGreen;
 }
 //---------------------------------------------------------------------------
@@ -237,15 +239,16 @@ void __fastcall TForm1::EventNewDateComPort(int RdByte)
                 {
                         bBuff[i-1] = bBuff[i];
                 }
+                bBuff[bBuffMax-1] = bByte;
                 // find code
                 if ( bBuff[  0]!=0xe6 )         continue;
                 if ( bBuff[  1]!=0x0c )         continue;
-                if ( bBuff[  3]!=0xaa )         continue;
-                if ( bBuff[  4]!=0x55 )         continue;
-                if ( bBuff[ 92]!=0x55 )         continue;
-                if ( bBuff[ 93]!=0xaa )         continue;
+                //if ( bBuff[  3]!=0xaa )         continue;
+                //if ( bBuff[  4]!=0x55 )         continue;
+                //if ( bBuff[ 92]!=0x55 )         continue;
+                //if ( bBuff[ 93]!=0xaa )         continue;
                 // checked crc8
-                if ( bBuff[bBuffMax-1]!=crc8_buf(bBuff, bBuffMax-2) )   continue;
+                //if ( bBuff[bBuffMax-1]!=crc8_buf(bBuff, bBuffMax-2) )   continue;
                 BbSaveData();
         }
 }
@@ -334,6 +337,12 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
                 }
                 Label1->Caption = _Sens.len;
         }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Timer1Timer(TObject *Sender)
+{
+EventNewDateComPort(1);
 }
 //---------------------------------------------------------------------------
 
