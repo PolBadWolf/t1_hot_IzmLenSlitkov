@@ -324,9 +324,10 @@ namespace ns_izmlen1
                 unsigned char napr;
                 unsigned char fist;
                 unsigned char next;
-                unsigned long dochet;
+                unsigned int dochet;
             };
-        st_mss mss[100];
+#define st_mss_lim 100    
+    st_mss mss[st_mss_lim];
         unsigned char minNum;
     void IzmRenderMain()
     {
@@ -374,29 +375,38 @@ namespace ns_izmlen1
                 {
                     if ( datTimeMassive[map[sd]][1]<=datTimeMassive[map[su]][0] )
                     {   // find zone
-                        // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0]
-                        mss[mss_max].napr = 1;
-                        mss[mss_max].fist = sd;
-                        mss[mss_max].next = su-1;
-                        mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0];
-                        mss_max++;
-                        // sd : - : datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1]
-                        mss[mss_max].napr = 2;
-                        mss[mss_max].fist = sd;
-                        mss[mss_max].next = su;
-                        mss[mss_max].dochet = datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1];
-                        mss_max++;
+                        if ( (mss_max<st_mss_lim) && (sd!=(su-2)) )
+                        {
+                            // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0]
+                            mss[mss_max].napr = 1;
+                            mss[mss_max].fist = sd;
+                            mss[mss_max].next = su-1;
+                            mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0];
+                            mss_max++;
+                        }
+                        if ( (mss_max<st_mss_lim) && (sd!=(su-1)) )
+                        {
+                            // sd : - : datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1]
+                            mss[mss_max].napr = 2;
+                            mss[mss_max].fist = sd;
+                            mss[mss_max].next = su;
+                            mss[mss_max].dochet = datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1];
+                            mss_max++;
+                        }
                     }
                     else
                     {
                         if ( su==(maxn-1) )
                         {   // end sensor
-                            // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0]
-                            mss[mss_max].napr = 0;
-                            mss[mss_max].fist = sd;
-                            mss[mss_max].next = su;
-                            mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0];
-                            mss_max++;
+                            if ( (mss_max<st_mss_lim) && (sd!=(su-1)) )
+                            {
+                                // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0]
+                                mss[mss_max].napr = 0;
+                                mss[mss_max].fist = sd;
+                                mss[mss_max].next = su;
+                                mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0];
+                                mss_max++;
+                            }
                         }
                         else
                         {
@@ -600,10 +610,10 @@ namespace ns_izmlen1
         {
             massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].dochet)[b]; 
         }
+        massSend[IdxLen] = massSendIdx+1;
         // crc
-        massSend[massSendIdx] = crc8_buf(massSend, massSendIdx);
+        massSend[massSendIdx] = crc8_buf(massSend, massSendIdx-1);
         massSendIdx++;
-        massSend[IdxLen] = massSendIdx;
         // ============ SEND ================
         if (massSendIdx==massSendLen)
         {

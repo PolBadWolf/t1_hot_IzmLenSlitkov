@@ -68,7 +68,6 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
                 comPort = NULL;
                 ShapeConnect->Brush->Color = clWindow;
         }
-        Timer1->Enabled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button1Click(TObject *Sender)
@@ -101,8 +100,8 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
         ShapeConnect->Brush->Color = clGreen;
 }
 //---------------------------------------------------------------------------
-#define bBuffMax 103
-unsigned char bBuff[bBuffMax];
+unsigned char bBuffMax = 0;
+unsigned char bBuff[256];
 void __fastcall TForm1::BbSaveData()
 {
         // var
@@ -156,7 +155,7 @@ void __fastcall TForm1::BbSaveData()
         next = bBuff[97];
         // offset
         offsetd = 0;
-        for (int b=0; b<4; b++)
+        for (int b=0; b<2; b++)
         {
                 ((unsigned char *)&offsetd)[b] = bBuff[b+98];
         }
@@ -234,22 +233,36 @@ void __fastcall TForm1::EventNewDateComPort(int RdByte)
         unsigned long zakaz, fact;
         while( comPort->ReadBuf(&bByte, &(zakaz=1), &fact)==0 )
         {
-                // shift
-                for (int i=1; i<bBuffMax; i++)
+                if (bBuffMax==0)
                 {
-                        bBuff[i-1] = bBuff[i];
+                        // shift
+                        for (int i=1; i<5; i++)
+                        {
+                                bBuff[i-1] = bBuff[i];
+                        }
+                        bBuff[4] = bByte;
+                        // find code
+                        if ( bBuff[0]!=0xe6 )         continue;
+                        if ( bBuff[1]!=0x0c )         continue;
+                        if ( bBuff[3]!=0xaa )         continue;
+                        if ( bBuff[4]!=0x55 )         continue;
+                        eventNewDateInd = 5;
+                        bBuffMax = bBuff[2]; // len
+                        continue;
                 }
-                bBuff[bBuffMax-1] = bByte;
-                // find code
-                if ( bBuff[  0]!=0xe6 )         continue;
-                if ( bBuff[  1]!=0x0c )         continue;
-                //if ( bBuff[  3]!=0xaa )         continue;
-                //if ( bBuff[  4]!=0x55 )         continue;
-                //if ( bBuff[ 92]!=0x55 )         continue;
-                //if ( bBuff[ 93]!=0xaa )         continue;
-                // checked crc8
-                //if ( bBuff[bBuffMax-1]!=crc8_buf(bBuff, bBuffMax-2) )   continue;
-                BbSaveData();
+                else
+                {
+                        bBuff[eventNewDateInd] = bByte;
+                        eventNewDateInd++;
+                        if (eventNewDateInd<bBuffMax)   continue;
+                        bBuffMax = 0;
+                        if ( bBuff[ 92]!=0x55 )         continue;
+                        if ( bBuff[ 93]!=0xaa )         continue;
+                        Edit19->Text = bBuff[2];
+                        // checked crc8
+                        if ( bBuff[eventNewDateInd-1]!=crc8_buf(bBuff, eventNewDateInd-2) )   continue;
+                        BbSaveData();
+                }
         }
 }
 //---------------------------------------------------------------------------
@@ -286,6 +299,10 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
         int sLen, sTime;
         int w = -1;
         int sB,sE;
+        Edit15->Text = _Sens.modeRender;
+        Edit16->Text = _Sens.fist;
+        Edit17->Text = _Sens.next;
+        Edit18->Text = _Sens.offset;
         switch(_Sens.modeRender)
         {
                 case (0) :
@@ -340,9 +357,5 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::Timer1Timer(TObject *Sender)
-{
-EventNewDateComPort(1);
-}
-//---------------------------------------------------------------------------
+
 

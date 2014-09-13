@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1914849972
+Checksum=289254338
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -17,13 +17,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\OutDebug.cpp}.51.5@1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\izm_len.cpp}.340.7@1" 0 0 0 0 "" 0 ""
@@ -39,13 +32,15 @@ Bp10=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.608.9@1" 1 0 0 0 "" 0 ""
 Bp11=_ "STD_CODE" "{$PROJ_DIR$\Variable.cpp}.7.1@1" 0 0 0 0 "" 0 ""
 Bp12=_ "STD_CODE" "{$PROJ_DIR$\menu.cpp}.444.7@1" 1 0 0 0 "" 0 ""
 Bp13=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.275.9@1" 1 0 0 0 "" 0 ""
-Bp14=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.579.28@1" 1 0 0 0 "" 0 ""
-Bp15=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.584.28@1" 1 0 0 0 "" 0 ""
-Bp16=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.589.28@1" 1 0 0 0 "" 0 ""
-Bp17=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.594.28@1" 1 0 0 0 "" 0 ""
-Bp18=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.599.28@1" 1 0 0 0 "" 0 ""
-Bp19=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.604.9@1" 1 0 0 0 "" 0 ""
-Count=20
+Bp14=_ "STD_CODE" "{$PROJ_DIR$\izm_len1.cpp}.604.9@1" 1 0 0 0 "" 0 ""
+Count=15
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1

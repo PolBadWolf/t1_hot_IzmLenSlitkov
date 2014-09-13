@@ -96,7 +96,7 @@ object Form1: TForm1
     Width = 57
     Height = 21
     TabOrder = 0
-    Text = 'COM1'
+    Text = 'COM3'
   end
   object Button1: TButton
     Left = 128
@@ -245,18 +245,51 @@ object Form1: TForm1
     TabOrder = 18
     Text = 'Edit1'
   end
+  object Edit15: TEdit
+    Left = 672
+    Top = 16
+    Width = 57
+    Height = 21
+    TabOrder = 19
+    Text = 'Edit15'
+  end
+  object Edit16: TEdit
+    Left = 752
+    Top = 24
+    Width = 121
+    Height = 21
+    TabOrder = 20
+    Text = 'Edit16'
+  end
+  object Edit17: TEdit
+    Left = 936
+    Top = 24
+    Width = 121
+    Height = 21
+    TabOrder = 21
+    Text = 'Edit17'
+  end
+  object Edit18: TEdit
+    Left = 752
+    Top = 56
+    Width = 297
+    Height = 21
+    TabOrder = 22
+    Text = 'Edit18'
+  end
+  object Edit19: TEdit
+    Left = 560
+    Top = 56
+    Width = 121
+    Height = 21
+    TabOrder = 23
+    Text = 'Edit19'
+  end
   object TimerRender: TTimer
     Enabled = False
     Interval = 20
     OnTimer = TimerRenderTimer
     Left = 304
     Top = 8
-  end
-  object Timer1: TTimer
-    Enabled = False
-    Interval = 10
-    OnTimer = Timer1Timer
-    Left = 608
-    Top = 24
   end
 end
