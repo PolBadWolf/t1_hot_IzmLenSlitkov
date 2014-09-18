@@ -46,9 +46,9 @@ void __fastcall TForm1::GroupBox10MouseMove(TObject *Sender,
                         dl_sm = X - OldX;
                         if (dl_sm>0)
                         {
-                                if ( (dl_cur+dl_sm)>600 )
+                                if ( (dl_cur+dl_sm)>800 )
                                 {
-                                        dl_sm = 600-dl_cur;
+                                        dl_sm = 800-dl_cur;
                                 }
                         }
                         if (dl_sm<0)

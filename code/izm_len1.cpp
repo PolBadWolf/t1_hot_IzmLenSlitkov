@@ -319,43 +319,393 @@ namespace ns_izmlen1
         }
     }
     // =========================================================================
-            struct st_mss
+    struct st_mss
+    {
+        unsigned char napr;
+        unsigned char modeRender;
+        //
+        unsigned char fist;
+        unsigned char next;
+        unsigned char sFist;
+        unsigned char sNext;
+        unsigned int  dochet;
+        unsigned int  Len;
+        unsigned char pm;
+    };
+#define st_mss_lim 100
+        st_mss        mss[st_mss_lim];
+        unsigned char mss_max = 0;
+        // nDat - all sensors (const)
+          signed char map[nDat];
+        unsigned char maxn = 0;
+        //
+        class strSpeed
+        {
+        public:
+            unsigned int  sLen, sTime;
+            signed char sb, se;
+        };
+        void speedSelect(signed char d,    signed char u, unsigned char maxn, unsigned char *sB, unsigned char *sE, unsigned int *sLen, unsigned int *sTime)
+        {
+            strSpeed mass[4];
+            unsigned char massMax = 0;
+            signed char sb, se;
+            // 1
+            sb = d-1; se = d;
+            if (sb>=0)
             {
-                unsigned char napr;
-                unsigned char fist;
-                unsigned char next;
-                unsigned int dochet;
-            };
-#define st_mss_lim 100    
-    st_mss mss[st_mss_lim];
-        unsigned char minNum;
+                mass[massMax].sb    = sb;
+                mass[massMax].se    = se;
+                mass[massMax].sLen  =     vg::rs_Dat[map[se]]   -    vg::rs_Dat[map[sb]];
+                mass[massMax].sTime = datTimeMassive[map[se]][1]-datTimeMassive[map[sb]][1];
+                massMax++;
+            }
+            // 2
+            sb = d; se = d+1;
+            {
+                mass[massMax].sb    = sb;
+                mass[massMax].se    = se;
+                mass[massMax].sLen  =     vg::rs_Dat[map[se]]   -    vg::rs_Dat[map[sb]];
+                mass[massMax].sTime = datTimeMassive[map[se]][1]-datTimeMassive[map[sb]][1];
+                massMax++;
+            }
+            // 3
+            sb = u-1; se = u;
+            {
+                mass[massMax].sb    = sb;
+                mass[massMax].se    = se;
+                mass[massMax].sLen  =     vg::rs_Dat[map[se]]   -    vg::rs_Dat[map[sb]];
+                mass[massMax].sTime = datTimeMassive[map[se]][0]-datTimeMassive[map[sb]][0];
+                massMax++;
+            }
+            // 4
+            sb = u; se = u+1;
+            if (se<maxn)
+            {
+                mass[massMax].sb    = sb;
+                mass[massMax].se    = se;
+                mass[massMax].sLen  =     vg::rs_Dat[map[se]]   -    vg::rs_Dat[map[sb]];
+                mass[massMax].sTime = datTimeMassive[map[se]][0]-datTimeMassive[map[sb]][0];
+                massMax++;
+            }
+            // find min
+            unsigned char n = 0;
+            for (unsigned char i=1; i<massMax; i++)
+                if ( mass[n].sLen>mass[i].sLen ) n = i;
+            // save
+            *sLen  = mass[n].sLen;
+            *sTime = mass[n].sTime;
+            *sB    = mass[n].sb;
+            *sE    = mass[n].se;
+        }
+        unsigned char saveRenderB(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 1;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            unsigned int base;
+            unsigned int offSet;
+            base   =     vg::rs_Dat[map[u]]   -    vg::rs_Dat[map[d]];
+            offSet = datTimeMassive[map[d]][1]-datTimeMassive[map[u]][0];
+            unsigned char sB,   sE;
+            unsigned int  sLen, sTime;
+            speedSelect(d, u, maxn, &sB, &sE, &sLen, &sTime);
+            mss[mss_max].napr   = 1;
+            mss[mss_max].fist   = d;
+            mss[mss_max].next   = u;
+            mss[mss_max].sFist  = sB;
+            mss[mss_max].sNext  = sE;
+            mss[mss_max].dochet = offSet;
+            mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+            mss[mss_max].pm     = 1; // +
+            mss_max++;
+            if ( mss_max>=st_mss_lim ) stat = 1;
+            return stat;
+        }
+        unsigned char saveRender1(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[d  ]][1]> datTimeMassive[map[u-1]][0])
+                                             &&
+                 (datTimeMassive[map[d  ]][1]<=datTimeMassive[map[u  ]][0])
+                )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
+                offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d, u-1, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 3;
+                    mss[mss_max].fist   = d;
+                    mss[mss_max].next   = u-1;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 1; // +
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender2(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[d  ]][1]> datTimeMassive[map[u-1]][0])
+                                             &&
+                 (datTimeMassive[map[d  ]][1]<=datTimeMassive[map[u  ]][0])
+                )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
+                offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d, u, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 4;
+                    mss[mss_max].fist   = d;
+                    mss[mss_max].next   = u;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 2; // -
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender3(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[u  ]][0]> datTimeMassive[map[d  ]][1])
+                                             &&
+                 (datTimeMassive[map[u  ]][1]<=datTimeMassive[map[d+1]][1])
+                )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
+                offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d, u, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 5;
+                    mss[mss_max].fist   = d;
+                    mss[mss_max].next   = u;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 2; // -
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender4(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[u  ]][0]> datTimeMassive[map[d  ]][1])
+                                             &&
+                 (datTimeMassive[map[u  ]][0]<=datTimeMassive[map[d+1]][1])
+               )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
+                offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d+1, u, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 6;
+                    mss[mss_max].fist   = d+1;
+                    mss[mss_max].next   = u;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 1; // +
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender5(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[d  ]][1]> datTimeMassive[map[u-1]][0])
+//                                             &&
+//                 (datTimeMassive[map[u  ]][0]<=datTimeMassive[map[d+1]][1])
+               )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
+                offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d, u-1, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 7;
+                    mss[mss_max].fist   = d;
+                    mss[mss_max].next   = u-1;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 1; // +
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender6(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( ((d-1)<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[u-1]][0]> datTimeMassive[map[d-1]][1])
+                                             &&
+                 (datTimeMassive[map[u-1]][0]<=datTimeMassive[map[d  ]][1])
+               )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d-1]];
+                offSet = datTimeMassive[map[u-1]][0]-datTimeMassive[map[d-1]][1];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d-1, u-1, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 8;
+                    mss[mss_max].fist   = d-1;
+                    mss[mss_max].next   = u-1;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 2; // -
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender7(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || (u>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[d+1]][1]> datTimeMassive[map[u  ]][0])
+//                                             &&
+//                 (datTimeMassive[map[d+1]][1]<=datTimeMassive[map[u+1]][0])
+               )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
+                offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d+1, u, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 9;
+                    mss[mss_max].fist   = d+1;
+                    mss[mss_max].next   = u;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 1; // +
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+        unsigned char saveRender8(signed char d, signed char u, unsigned char maxn)
+        {
+            if ( mss_max>=st_mss_lim )   return 2;
+            if ( (d<0) || ((u+1)>=maxn)  )   return 0;
+            unsigned char stat = 0;
+            if ( (datTimeMassive[map[d+1]][1]> datTimeMassive[map[u  ]][0])
+                                             &&
+                 (datTimeMassive[map[d+1]][1]<=datTimeMassive[map[u+1]][0])
+               )
+            {
+                unsigned int base;
+                unsigned int offSet;
+                base   =     vg::rs_Dat[map[u+1]]   -    vg::rs_Dat[map[d+1]];
+                offSet = datTimeMassive[map[u+1]][0]-datTimeMassive[map[d+1]][1];
+                if ( offSet<base )
+                {
+                    unsigned char sB,   sE;
+                    unsigned int  sLen, sTime;
+                    speedSelect(d+1, u+1, maxn, &sB, &sE, &sLen, &sTime);
+                    mss[mss_max].napr   = 10;
+                    mss[mss_max].fist   = d+1;
+                    mss[mss_max].next   = u+1;
+                    mss[mss_max].sFist  = sB;
+                    mss[mss_max].sNext  = sE;
+                    mss[mss_max].dochet = offSet;
+                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].pm     = 2; // -
+                    mss_max++;
+                    if ( mss_max>=st_mss_lim ) stat = 1;
+                }
+            }
+            return stat;
+        }
+    // ===========================================================================
     void IzmRenderMain()
     {
-        // max
-        signed char maxn = 0;
-        signed char map[nDat]; // nDat - all sensors (const)
-        // ========================
-        minNum = 255;
-        unsigned char mss_max = 0;
-        // ========================
         // reset map
         for(unsigned char i=0; i<nDat; i++)
         {
             map[i] = -1;
         }
         // init map
+        maxn      = 0;
         datErrTmp = 0;
         for(unsigned char i=0; i<nDat; i++)
         {
-            if (datTimeMassive[i][0]>0)
+            if (datTimeMassive[i][0]!=0)
             {
                 map[maxn] = i;
                 maxn++;
             }
             else
-            {
                 datErrTmp |= 1<<i;
-            }
         }
         // 
         if (maxn<3)
@@ -368,136 +718,96 @@ namespace ns_izmlen1
         else
         {   // find soulions
             mss_max = 0;
-            // write massive adding
-            for (unsigned char sd=0; sd<(maxn-2); sd++)
-            {
-                for (unsigned char su=(sd+1); su<maxn; su++)
+            //    write massive adding
+            if ( datTimeMassive[map[0]][1]>=datTimeMassive[map[maxn-1]][0] )
+            {   // big tube
+                saveRenderB(0, maxn-1, maxn);
+            }
+            else
+            {   // small tube
+                for (unsigned char sd=0; sd<(maxn-2); sd++)
                 {
-                    if ( datTimeMassive[map[sd]][1]<=datTimeMassive[map[su]][0] )
-                    {   // find zone
-                        if ( (mss_max<st_mss_lim) && (sd!=(su-2)) )
-                        {
-                            // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0]
-                            mss[mss_max].napr = 1;
-                            mss[mss_max].fist = sd;
-                            mss[mss_max].next = su-1;
-                            mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su-1]][0];
-                            mss_max++;
-                        }
-                        if ( (mss_max<st_mss_lim) && (sd!=(su-1)) )
-                        {
-                            // sd : - : datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1]
-                            mss[mss_max].napr = 2;
-                            mss[mss_max].fist = sd;
-                            mss[mss_max].next = su;
-                            mss[mss_max].dochet = datTimeMassive[map[su]][0]-datTimeMassive[map[sd]][1];
-                            mss_max++;
-                        }
-                    }
-                    else
+                    // buff over
+                    if ( mss_max>=st_mss_lim ) break;
+                    for (unsigned char su=(sd+1); su<maxn; su++)
                     {
-                        if ( su==(maxn-1) )
-                        {   // end sensor
-                            if ( (mss_max<st_mss_lim) && (sd!=(su-1)) )
-                            {
-                                // sd : + : datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0]
-                                mss[mss_max].napr = 0;
-                                mss[mss_max].fist = sd;
-                                mss[mss_max].next = su;
-                                mss[mss_max].dochet = datTimeMassive[map[sd]][1]-datTimeMassive[map[su]][0];
-                                mss_max++;
-                            }
-                        }
-                        else
-                        {
+                        // buff over
+                        if ( mss_max>=st_mss_lim ) break;
+                        if ( datTimeMassive[map[sd]][1]>datTimeMassive[map[su]][0] )
                             continue;
-                        }
+                        if ( saveRender1(sd, su, maxn) ) break;
+                        if ( saveRender2(sd, su, maxn) ) break;
+                        if ( saveRender3(sd, su, maxn) ) break;
+                        if ( saveRender4(sd, su, maxn) ) break;
+                        if ( saveRender5(sd, su, maxn) ) break;
+                        if ( saveRender6(sd, su, maxn) ) break;
+                        if ( saveRender7(sd, su, maxn) ) break;
+                        if ( saveRender8(sd, su, maxn) ) break;
+                        //break;
                     }
                 }
             }
             // select min adding
-            unsigned long minTime;
-            minTime = mss[(mss_max-1)].dochet;
-            minNum  = (mss_max-1);
-            unsigned long base, speedLen, speedLen1, speedTime;
-            for (signed char i=(mss_max-1); i>=0; i--)
             {
-                if ( minTime>mss[i].dochet )
+                st_mss tmpSort;
+                bool   flSort = true;
+                while (flSort)
                 {
-                    minTime = mss[i].dochet;
-                    minNum = i;
+                    flSort = false;
+                    for (unsigned char n=1;n<mss_max;n++)
+                    {
+                        if ( (mss[n-1].dochet>mss[n].dochet)
+//                        && (  mss[n].dochet<(
+                           )
+                        {
+                            tmpSort = mss[n-1];
+                            mss[n-1] = mss[n];
+                            mss[n] = tmpSort;
+                            flSort = true;
+                            break;
+                        }
+                    }
                 }
+                /*
+                flSort = false;
+                while (flSort)
+                {
+                    flSort = false;
+                    for (unsigned char n=1;n<mss_max;n++)
+                    {
+                        signed long x = mss[n-1].dochet-mss[n].dochet;
+                        if (x<0) x=-x;
+                        if ( (x<50)&&(mss[n-1].sLen>mss[n].sLen) )
+                        {
+                            flSort = true;
+                            tmpSort = mss[n-1];
+                            mss[n-1] = mss[n];
+                            mss[n] = tmpSort;
+                            break;
+                        }
+                    }
+                }
+                */
+                        /*
+                        if ( (mss[n-1].dochet==mss[n].dochet)&&(mss[n-1].sLen==mss[n].sLen)&&(mss[n-1].modeRender>mss[n].modeRender) )
+                        {
+                            flSort = true;
+                            tmpSort = mss[n-1];
+                            mss[n-1] = mss[n];
+                            mss[n] = tmpSort;
+                            break;
+                        }
+                        */
             }
+            
             // render
-            base = vg::rs_Dat[map[mss[minNum].next]]-vg::rs_Dat[map[mss[minNum].fist]];
-            vg::teleMsg[0] = map[mss[minNum].fist] + '0';
-            vg::teleMsg[1] = map[mss[minNum].next] + '0';
-//                            mss[mss_max].dochetNext = map[sd];
-            if (mss[minNum].napr==0)
-            {   // big tube
-                speedLen  =     vg::rs_Dat[map[mss[minNum].next]]    -     vg::rs_Dat[map[mss[minNum].next-1]];
-                speedLen1 =     vg::rs_Dat[map[mss[minNum].fist+1]]  -     vg::rs_Dat[map[mss[minNum].fist]];
-                if ( speedLen>speedLen1)
-                {
-                    speedLen = speedLen1;
-                    speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
-                    vg::teleMsg[3] = map[mss[minNum].fist]   + '0';
-                    vg::teleMsg[4] = map[mss[minNum].fist+1] + '0';
-                }
-                else
-                {
-                    speedTime = datTimeMassive[map[mss[minNum].next]][0] - datTimeMassive[map[mss[minNum].next-1]][0];
-                    vg::teleMsg[3] = map[mss[minNum].next-1] + '0';
-                    vg::teleMsg[4] = map[mss[minNum].next]   + '0';
-                }
-                lenRender = base + speedLen*mss[minNum].dochet/speedTime;
-                flNewLen = true;
-                vg::teleMsg[2] = '+';
-            }
-            if (mss[minNum].napr==1)
-            {   // normal tube doschit plus
-                speedLen  =     vg::rs_Dat[map[mss[minNum].next+1]]  -     vg::rs_Dat[map[mss[minNum].next]];
-                speedLen1 =     vg::rs_Dat[map[mss[minNum].fist+1]]  -     vg::rs_Dat[map[mss[minNum].fist]];
-                if ( speedLen>speedLen1)
-                {
-                    speedLen = speedLen1;
-                    speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
-                    vg::teleMsg[3] = map[mss[minNum].fist]   + '0';
-                    vg::teleMsg[4] = map[mss[minNum].fist+1] + '0';
-                }
-                else
-                {
-                    speedTime = datTimeMassive[map[mss[minNum].next+1]][0] - datTimeMassive[map[mss[minNum].next]][0];
-                    vg::teleMsg[3] = map[mss[minNum].next]   + '0';
-                    vg::teleMsg[4] = map[mss[minNum].next+1] + '0';
-                }
-                lenRender = base + speedLen*mss[minNum].dochet/speedTime;
-                flNewLen = true;
-                vg::teleMsg[2] = '+';
-            }
-            if (mss[minNum].napr==2)
-            {   // normal tube doschit minus
-                speedLen  =     vg::rs_Dat[map[mss[minNum].next]]    -     vg::rs_Dat[map[mss[minNum].next-1]];
-                speedLen1 =     vg::rs_Dat[map[mss[minNum].fist+1]]  -     vg::rs_Dat[map[mss[minNum].fist]];
-                if ( speedLen>speedLen1)
-                {
-                    speedLen = speedLen1;
-                    speedTime = datTimeMassive[map[mss[minNum].fist+1]][0] - datTimeMassive[map[mss[minNum].fist]][0];
-                    vg::teleMsg[3] = map[mss[minNum].fist]   + '0';
-                    vg::teleMsg[4] = map[mss[minNum].fist+1] + '0';
-                }
-                else
-                {
-                    speedTime = datTimeMassive[map[mss[minNum].next]][0] - datTimeMassive[map[mss[minNum].next-1]][0];
-                    vg::teleMsg[3] = map[mss[minNum].next-1] + '0';
-                    vg::teleMsg[4] = map[mss[minNum].next]   + '0';
-                }
-                lenRender = base - speedLen*mss[minNum].dochet/speedTime;
-                flNewLen = true;
-                vg::teleMsg[2] = '-';
-            }
-            // === END RENDER - OUT : lenRender=================================
-            vg::teleMsg[5] = 0;
+            vg::teleMsg[0] = map[mss[0].fist]  + '0';
+            vg::teleMsg[1] = map[mss[0].next]  + '0';
+            vg::teleMsg[2] = '+';
+            vg::teleMsg[3] = map[mss[0].sFist] + '0';
+            vg::teleMsg[4] = map[mss[0].sNext] + '0';
+            lenRender = mss[0].Len;
+            flNewLen = true;
             eventMassStep = InitOutDac;
         }
         // =========
@@ -518,17 +828,15 @@ namespace ns_izmlen1
             + sizeof(datErrTmp)
 //            + sizeof(lenRender)
             + simLen
+            + 7                     // fist, next, napr, sFist, sNext, dochet
             + sizeof(vg::rs_Dat)
             + sizeof(datTimeMassive)
-            + sizeof(unsigned int)  // 0xaa55
-            + sizeof(minNum)        // cur trio
-            + sizeof(st_mss)        // cur trio
             + sizeof(unsigned char) // crc
             ;
             unsigned char massSend[massSendLen];
             unsigned char massSendIdx = 0;
         massSend[massSendIdx++] = 0xe6;
-        massSend[massSendIdx++] = 0x0c; // code
+        massSend[massSendIdx++] = 0x0d; // code
         IdxLen = massSendIdx;
         massSend[massSendIdx++] = 0x00; // len
         massSend[massSendIdx++] = 0xaa; // aa
@@ -562,7 +870,17 @@ namespace ns_izmlen1
                 massSendIdx++;
             }
         }
-        
+        // fist, next, napr, sFist, sNext
+        massSend[massSendIdx++] = map[mss[0].fist];
+        massSend[massSendIdx++] = map[mss[0].next];
+        massSend[massSendIdx++] =     mss[0].napr;
+        massSend[massSendIdx++] = map[mss[0].sFist];
+        massSend[massSendIdx++] = map[mss[0].sNext];
+        // mss[minNum].dochet
+        for (unsigned char b=0; b<sizeof(mss[0].dochet); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&mss[0].dochet)[b]; 
+        }
         // vg::rs_Dat
         for (unsigned char n=0; n<(sizeof(vg::rs_Dat)/sizeof(vg::rs_Dat[0])); n++)
         {
@@ -582,33 +900,6 @@ namespace ns_izmlen1
                     massSend[massSendIdx++] = ((unsigned char *)&datTimeMassive[n][l])[b];
                 }
             }
-        }
-        massSend[massSendIdx++] = 0x55; // 55
-        massSend[massSendIdx++] = 0xaa; // aa
-        // minNum
-        for (unsigned char b=0; b<sizeof(minNum); b++)
-        {
-            massSend[massSendIdx++] = ((unsigned char *)&minNum)[b]; 
-        }
-        // mss[minNum].napr
-        for (unsigned char b=0; b<sizeof(mss[minNum].napr); b++)
-        {
-            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].napr)[b]; 
-        }
-        // mss[minNum].fist
-        for (unsigned char b=0; b<sizeof(mss[minNum].fist); b++)
-        {
-            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].fist)[b]; 
-        }
-        // mss[minNum].next
-        for (unsigned char b=0; b<sizeof(mss[minNum].next); b++)
-        {
-            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].next)[b]; 
-        }
-        // mss[minNum].dochet
-        for (unsigned char b=0; b<sizeof(mss[minNum].dochet); b++)
-        {
-            massSend[massSendIdx++] = ((unsigned char *)&mss[minNum].dochet)[b]; 
         }
         massSend[IdxLen] = massSendIdx+1;
         // crc

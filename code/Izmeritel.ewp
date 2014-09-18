@@ -63,7 +63,7 @@
         </option>
         <option>
           <name>SCCStackSize</name>
-          <state>0x120</state>
+          <state>0x200</state>
         </option>
         <option>
           <name>SCExtCStack</name>
@@ -71,7 +71,7 @@
         </option>
         <option>
           <name>SCRStackSize</name>
-          <state>64</state>
+          <state>128</state>
         </option>
         <option>
           <name>SCExtRStack</name>
@@ -188,7 +188,7 @@
         </option>
         <option>
           <name>LCNearHeapSize</name>
-          <state>0x500</state>
+          <state>0x400</state>
         </option>
         <option>
           <name>LCFarHeapSize</name>

@@ -3,6 +3,7 @@
 #include <vcl.h>
 #include <stdio.h>
 #pragma hdrstop
+#include <fstream.h>
 
 #include "MainFormUnit.h"
 #include "ComPort.h"
@@ -23,12 +24,13 @@ struct TbSensor
 struct TbSens
 {
         char     len[6];
-        TbSensor sensor[8];
-        int      nSolushin;
-        int      modeRender;
         int      fist;
         int      next;
+        int      napr;
+        int      sFist;
+        int      sNext;
         int      offset;
+        TbSensor sensor[8];
 } _Sens;
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -110,7 +112,7 @@ void __fastcall TForm1::BbSaveData()
         int sTimeBegin[8];
         int sTimeEnd[8];
         int nSolushin;
-        int modeRender;
+        int napr, sFist, sNext;
         int fist, next, offsetd;
         // read date
         // simbol len
@@ -118,22 +120,40 @@ void __fastcall TForm1::BbSaveData()
         {
                 lenS[i] = bBuff[i+6];
         }
-        // lens sensors
+        // fist - 12
+        fist = bBuff[12];
+        // next - 13
+        next = bBuff[13];
+        // napr - 14
+        napr = bBuff[14];
+        // sFist - 15
+        sFist = bBuff[15];
+        // sNext - 16
+        sNext = bBuff[16];
+        // dochet - 17
+        offsetd = 0;
+        for (int b=0; b<2; b++)
+        {
+                ((unsigned char *)&offsetd)[b] = bBuff[b+17];
+        }
+        // rs_dat - 19
+        // position sensors
         for (unsigned char i=0; i<8; i++)
         {
                 bufPos[i] = 0;
                 for (int b=0; b<2; b++)
                 {
-                        ((unsigned char *)&bufPos[i])[b] = bBuff[(2*i)+b+12];
+                        ((unsigned char *)&bufPos[i])[b] = bBuff[(2*i)+b+19];
                 }
         }
+        // dat_time - 35
         // time begin
         for (unsigned char i=0; i<8; i++)
         {
                 sTimeBegin[i] = 0;
                 for (int b=0; b<4; b++)
                 {
-                        ((unsigned char*)&sTimeBegin[i])[b] = bBuff[(4*i)+b+28];
+                        ((unsigned char*)&sTimeBegin[i])[b] = bBuff[(4*i)+b+35];
                 }
         }
         // time end
@@ -142,23 +162,10 @@ void __fastcall TForm1::BbSaveData()
                 sTimeEnd[i] = 0;
                 for (int b=0; b<4; b++)
                 {
-                        ((unsigned char*)&sTimeEnd[i])[b] = bBuff[(4*i)+b+60];
+                        ((unsigned char*)&sTimeEnd[i])[b] = bBuff[(4*i)+b+67];
                 }
         }
-        // solushin
-        nSolushin = bBuff[94];
-        // mode render
-        modeRender = bBuff[95];
-        // fist
-        fist = bBuff[96];
-        // next
-        next = bBuff[97];
-        // offset
-        offsetd = 0;
-        for (int b=0; b<2; b++)
-        {
-                ((unsigned char *)&offsetd)[b] = bBuff[b+98];
-        }
+        // crc - 99
         //-------------------------------------------------------------------
         /*
         sprintf(lenS, "07.365");
@@ -214,14 +221,18 @@ void __fastcall TForm1::BbSaveData()
         {
                 _Sens.sensor[i].timeEnd = sTimeEnd[i];
         }
-        // solushin
-        _Sens.nSolushin = nSolushin;
         // mode render
-        _Sens.modeRender = modeRender;
+        //_Sens.modeRender = modeRender;
         // fist
         _Sens.fist = fist;
         // next
         _Sens.next = next;
+        // napr
+        _Sens.napr = napr;
+        // sFist
+        _Sens.sFist = sFist;
+        // sNext
+        _Sens.sNext = sNext;
         // offset
         _Sens.offset = offsetd;
         TimerRender->Enabled = true;
@@ -243,7 +254,7 @@ void __fastcall TForm1::EventNewDateComPort(int RdByte)
                         bBuff[4] = bByte;
                         // find code
                         if ( bBuff[0]!=0xe6 )         continue;
-                        if ( bBuff[1]!=0x0c )         continue;
+                        if ( bBuff[1]!=0x0d )         continue;
                         if ( bBuff[3]!=0xaa )         continue;
                         if ( bBuff[4]!=0x55 )         continue;
                         eventNewDateInd = 5;
@@ -256,20 +267,64 @@ void __fastcall TForm1::EventNewDateComPort(int RdByte)
                         eventNewDateInd++;
                         if (eventNewDateInd<bBuffMax)   continue;
                         bBuffMax = 0;
-                        if ( bBuff[ 92]!=0x55 )         continue;
-                        if ( bBuff[ 93]!=0xaa )         continue;
-                        Edit19->Text = bBuff[2];
                         // checked crc8
                         if ( bBuff[eventNewDateInd-1]!=crc8_buf(bBuff, eventNewDateInd-2) )   continue;
+                        if ( SpeedButton1->Down )
+                        {
+                                TFileStream *FileArhive = NULL;
+                                AnsiString str = Edit15->Text;
+    try
+    {
+        FileArhive = new TFileStream(str.c_str(), fmOpenWrite + fmShareDenyNone);
+        FileArhive->Seek(FileArhive->Size,1);
+    }
+    catch(...)
+    {
+        FileArhive = NULL;
+    }
+    if (FileArhive==NULL)
+    {
+        try
+        {
+            FileArhive = new TFileStream(str.c_str(), fmCreate);
+//            FileArhive->Write(headline1.c_str(),headline1.Length());
+//            FileArhive->Write(headline2.c_str(),headline2.Length());
+        }
+        catch(...)
+        {
+            FileArhive = NULL;
+        }
+    }
+    if (FileArhive)
+    {
+    FileArhive->Write(bBuff, eventNewDateInd);
+    delete FileArhive;
+    FileArhive = NULL;
+    }
+                        }
                         BbSaveData();
                 }
         }
 }
 //---------------------------------------------------------------------------
+int __fastcall mabs(int x)
+{
+        if (x<0)        x=-x;
+        return x;
+}
 void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
 {
-        int mapI[8], mapIi, mapIn;
+        int mapI[8], mapIi;
         ((TTimer *)Sender)->Enabled = false;
+        // ===========================
+        for (int stlb=0; stlb<8; stlb++)
+        {
+                StringGrid1->Cells[stlb+1][0] = IntToStr(stlb);
+                StringGrid1->Cells[stlb+1][1] = IntToStr(_Sens.sensor[stlb].position);
+                StringGrid1->Cells[stlb+1][2] = IntToStr(_Sens.sensor[stlb].timeBegin);
+                StringGrid1->Cells[stlb+1][3] = IntToStr(_Sens.sensor[stlb].timeEnd);
+        }
+        // ===========================
         // position
         for (int i=0; i<8; i++)
         {
@@ -284,8 +339,6 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
                 else
                 {
                         mapI[mapIi] = i;
-                        if ( _Sens.next==i )
-                                mapIn = mapIi;
                         mapIi++;
                         if ( (i<_Sens.fist) || (i>_Sens.next) )
                                 SensInd[i]->Brush->Color = clGreen;
@@ -294,68 +347,130 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
                 }
         }
         // tube
-        PanelTube->Left = (_Sens.sensor[_Sens.fist].position*sensMetr/1000)+sensOffset;
-        int wBase = _Sens.sensor[_Sens.next].position-_Sens.sensor[_Sens.fist].position;
-        int sLen, sTime;
-        int w = -1;
-        int sB,sE;
-        Edit15->Text = _Sens.modeRender;
-        Edit16->Text = _Sens.fist;
-        Edit17->Text = _Sens.next;
-        Edit18->Text = _Sens.offset;
-        switch(_Sens.modeRender)
+        PanelSpeed->Left = (_Sens.sensor[_Sens.sFist].position*sensMetr/1000)+sensOffset;
+        PanelSpeed->Width = ((_Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position)
+        *sensMetr/1000)-(SensInd[_Sens.sNext]->Width/2)+sensOffset;
+        int sLen, sTime, dochet;
+        switch(_Sens.napr)
         {
-                case (0) :
-                        sB = _Sens.sensor[mapI[mapIn]].position;
-                        sE = _Sens.sensor[mapI[mapIn-1]].position;
-                        sLen  = sB-sE;
-                        sTime = _Sens.sensor[mapI[mapIn]].timeBegin-_Sens.sensor[mapI[mapIn-1]].timeBegin;
-                        w = wBase + (sLen*_Sens.offset/sTime);
-                        break;
                 case (1) :
-                        sB = _Sens.sensor[mapI[mapIn+1]].position;
-                        sE = _Sens.sensor[mapI[mapIn]].position;
-                        sLen  = sB-sE;
-                        sTime = _Sens.sensor[mapI[mapIn+1]].timeBegin-_Sens.sensor[mapI[mapIn]].timeBegin;
-                        w = wBase + (sLen*_Sens.offset/sTime);
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = _Sens.offset*sLen/sTime;
                         break;
                 case (2) :
-                        sB = _Sens.sensor[mapI[mapIn]].position;
-                        sE = _Sens.sensor[mapI[mapIn-1]].position;
-                        sLen  = sB-sE;
-                        sTime = _Sens.sensor[mapI[mapIn]].timeBegin-_Sens.sensor[mapI[mapIn-1]].timeBegin;
-                        w = wBase - (sLen*_Sens.offset/sTime);
+                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = _Sens.offset*sLen/sTime;
+                        break;
+                case (3) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = _Sens.offset*sLen/sTime;
+                        break;
+                case (4) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = -_Sens.offset*sLen/sTime;
+                        break;
+                case (5) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset*sLen/sTime;
+                        break;
+                case (6) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = _Sens.offset*sLen/sTime;
+                        break;
+                case (7) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = _Sens.offset*sLen/sTime;
+                        break;
+                case (8) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = -_Sens.offset*sLen/sTime;
+                        break;
+                case (9) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = _Sens.offset*sLen/sTime;
+                        break;
+                case (10) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset*sLen/sTime;
+                        break;
+                case (11) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset*sLen/sTime;
+                        break;
+                case (12) :
+                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset*sLen/sTime;
                         break;
         }
-        if (w>0)
+        if ( (_Sens.sFist==_Sens.next) && (dochet<0) )
         {
-                PanelTube->Width  = w*sensMetr/1000+sensOffset-(Shape1->Width/2);
-                PanelSpeed->Left  = sE*sensMetr/1000+sensOffset;
-                PanelSpeed->Width = (sB-sE)*sensMetr/1000+sensOffset-(Shape1->Width/2);
-                // speed
-                for (int i=0; i<7; i++)
-                {
-                        SpeedB[i]->Left = -SpeedB[i]->Width;
-                        SpeedE[i]->Left = -SpeedE[i]->Width;
-                }
-                for (int n=1; n<mapIi; n++)
-                {
-                        int d1 = mapI[n-1];
-                        int d2 = mapI[n];
-                        int l = _Sens.sensor[d2].position-_Sens.sensor[d1].position;
-                        int tB = _Sens.sensor[d2].timeBegin-_Sens.sensor[d1].timeBegin;
-                        int tE = _Sens.sensor[d2].timeEnd-_Sens.sensor[d1].timeEnd;
-                        SpeedB[n-1]->Text = (float)l/tB;
-                        int sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedB[n-1]->Width;
-                        SpeedB[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
-                        SpeedE[n-1]->Text = (float)l/tE;
-                        sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedE[n-1]->Width;
-                        SpeedE[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
-                }
-                Label1->Caption = _Sens.len;
+                PanelTube->Left = ( (_Sens.sensor[_Sens.fist].position-dochet// +mabs(dochet)
+                                        )*sensMetr/1000)+sensOffset;
+                PanelTube->Width = ((_Sens.sensor[_Sens.next].position-_Sens.sensor[_Sens.fist].position
+                                     +dochet)*sensMetr/1000);
+        }
+        else
+        {
+                PanelTube->Left = (_Sens.sensor[_Sens.fist].position*sensMetr/1000)+sensOffset;
+                PanelTube->Width = ((_Sens.sensor[_Sens.next].position-_Sens.sensor[_Sens.fist].position
+                                     +dochet)*sensMetr/1000);
+        }
+        L_fist->Caption = _Sens.fist;
+        L_next->Caption = _Sens.next;
+        Label2->Caption =  _Sens.napr;
+        L_sFist->Caption = _Sens.sFist;
+        L_sNext->Caption = _Sens.sNext;
+        //L_OffSet->Caption = _Sens.offset;
+        L_OffSet->Caption = dochet;
+        Label1->Caption = _Sens.len;
+        for (int n=1; n<mapIi; n++)
+        {
+                int d1 = mapI[n-1];
+                int d2 = mapI[n];
+                int l = _Sens.sensor[d2].position-_Sens.sensor[d1].position;
+                int tB = _Sens.sensor[d2].timeBegin-_Sens.sensor[d1].timeBegin;
+                int tE = _Sens.sensor[d2].timeEnd-_Sens.sensor[d1].timeEnd;
+                SpeedB[n-1]->Text = (float)l/tB;
+                int sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedB[n-1]->Width;
+                SpeedB[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
+                SpeedE[n-1]->Text = (float)l/tE;
+                sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedE[n-1]->Width;
+                SpeedE[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
         }
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+        if (SaveDialog1->Execute())
+        {
+                Edit15->Text = SaveDialog1->FileName;
+        }
+}
+//---------------------------------------------------------------------------
 
+void __fastcall TForm1::SpeedButton1Click(TObject *Sender)
+{
+        if ( SpeedButton1->Down )
+        {
+                Shape9->Brush->Color = clLime;
+        }
+        else
+        {
+                Shape9->Brush->Color = clRed;
+        }
+}
+//---------------------------------------------------------------------------
 

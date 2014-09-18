@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 192
   Top = 124
-  Width = 907
+  Width = 1157
   Height = 213
   Caption = 'Form1'
   Color = clBtnFace
@@ -26,7 +26,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '0'
+      Text = '1000'
     end
   end
   object GroupBox2: TGroupBox
@@ -42,7 +42,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '1000'
+      Text = '2000'
     end
   end
   object GroupBox3: TGroupBox
@@ -58,7 +58,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '2000'
+      Text = '3000'
     end
   end
   object GroupBox4: TGroupBox
@@ -74,7 +74,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '3000'
+      Text = '4000'
     end
   end
   object GroupBox5: TGroupBox
@@ -90,7 +90,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '4000'
+      Text = '5000'
     end
   end
   object GroupBox6: TGroupBox
@@ -106,7 +106,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '5000'
+      Text = '6000'
     end
   end
   object GroupBox7: TGroupBox
@@ -122,7 +122,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '30000'
+      Text = '10350'
     end
   end
   object GroupBox8: TGroupBox
@@ -138,7 +138,7 @@ object Form1: TForm1
       Width = 73
       Height = 21
       TabOrder = 0
-      Text = '30000'
+      Text = '10860'
     end
   end
   object GroupBox9: TGroupBox
