@@ -60,4 +60,9 @@ unsigned int ad420_SwapWord(unsigned int cmd)
   return recv;
 }
 
+void ad420_OutDac(unsigned int mmetr)
+{
+    ad420_Init();
+    ad420_SwapWord((unsigned long)mmetr*40959/10000);
+}
 

@@ -7,9 +7,8 @@ namespace ns_TimerUser
 {
   void Init(void)
   {
-    // частота таймера
-    #define Ft 1000
     // предварительный делитель : 1, 8, 64, 256, 1024
+    // предварительный делитель : 1, 8, 32, 64, 128, 256, 1024
     #define PrDel 64
     
     #if (PrDel==1)
@@ -20,15 +19,26 @@ namespace ns_TimerUser
     #define PrCs02 0
     #define PrCs01 1
     #define PrCs00 0
-    #elif (PrDel==64)
+    #elif (PrDel==32)
     #define PrCs02 0
     #define PrCs01 1
     #define PrCs00 1
-    #elif (PrDel==256)
+    #elif (PrDel==64)
     #define PrCs02 1
     #define PrCs01 0
     #define PrCs00 0
+    #elif (PrDel==128)
+    #define PrCs02 1
+    #define PrCs01 0
+    #define PrCs00 1
+    #elif (PrDel==256)
+    #define PrCs02 1
+    #define PrCs01 1
+    #define PrCs00 0
     #elif (PrDel==1024)
+    #define PrCs02 1
+    #define PrCs01 1
+    #define PrCs00 1
     #else
     #error Error Timer System pred div
     #endif
@@ -42,10 +52,10 @@ namespace ns_TimerUser
     TCCR0_COM00 = 0;
     TCCR0_FOC0 = 0;
     TCNT0 = 0;
-    #if ((C_Fosc/PrDel/Ft)-1)>255
-    #error ((C_Fosc/PrDel/Ft)-1)>255
+    #if ((C_Fosc/PrDel/ftUserTimer)-1)>255
+    #error ((C_Fosc/PrDel/ftUserTimer)-1)>255
     #endif
-    OCR0 = (C_Fosc/PrDel/Ft)-1;
+    OCR0 = (C_Fosc/PrDel/ftUserTimer)-1;
     TIMSK_OCIE0 = 1;
   
     #undef PrDel

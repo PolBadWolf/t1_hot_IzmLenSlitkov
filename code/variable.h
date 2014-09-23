@@ -20,6 +20,8 @@ namespace vg
   extern unsigned int rs_slitok_speed;
   extern __eeprom unsigned char kf_usr;
   extern char teleMsg[10];
+  extern unsigned int upTimeMS;
+  extern unsigned char upTimeS, upTimeM, upTimeH, upTimeD, upTimeSN;
 }
 
 //inline void CritVarWrite(T *variable, T *newDat);

@@ -188,7 +188,7 @@
         </option>
         <option>
           <name>LCNearHeapSize</name>
-          <state>0x400</state>
+          <state>0x500</state>
         </option>
         <option>
           <name>LCFarHeapSize</name>

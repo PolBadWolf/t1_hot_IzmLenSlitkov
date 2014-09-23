@@ -55,6 +55,7 @@ namespace ns_menu
   void SetupMenu_zm();
   void SetupMenu_zp();
   void SetupMenu_i();
+  void SetupMenu_time();
   // ================================================================================================================
   void SetPassword();
   void SetPassword_s();
@@ -80,6 +81,11 @@ namespace ns_menu
   void SetSensYn_zm();
   void SetSensYn_zp();
   // ================================================================================================================
+  void DebugScrDac_zm();
+  void DebugScrDac_zp();
+  void DebugScrDac();
+  void DebugScrDac_s();
+  unsigned int znDac = 0;
   /*
   void SetKoff();  
   void SetKoff_v();
@@ -113,7 +119,7 @@ namespace ns_menu
 #define UkSetupError      4
     { SetupError_v      , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , SetupError      },
 #define UkSetupMenu       5
-    { FnVoid            , SetupMenu_m   , SetupMenu_zm    , SetupMenu_zp    , SetupMenu_i     , ExitSetup       , SetupMenu       },
+    { SetupMenu_time    , SetupMenu_m   , SetupMenu_zm    , SetupMenu_zp    , SetupMenu_i     , ExitSetup       , SetupMenu       },
 #define UkSetPassword     6
     { FnVoid            , SetPassword_m , SetPassword_zm  , SetPassword_zp  , SetPassword_i   , ExitSetup       , SetPassword     },
 #define UkSetPassYn       7
@@ -122,15 +128,10 @@ namespace ns_menu
     { FnVoid            , SetSensor_m   , SetSensor_zm    , SetSensor_zp    , SetSensor_i     , ExitSetup       , SetSensor       },
 #define UkSetSensYn       9
     { FnVoid            , SetSensYn_m   , SetSensYn_zm    , SetSensYn_zp    , FnVoid          , ExitSetup       , SetSensYn       },
-    /*
-#define UkSetKoff         10
-    { SetKoff_v         , SetKoff_m     , SetKoff_zm      , SetKoff_zp      , SetKoff_e       , ExitSetup       , SetKoff         },
-#define UkSetKoffYn       11
-    { FnVoid            , FnVoid        , SetKoffYn_zm    , SetKoffYn_zp    , FnVoid          , ExitSetup       , SetKoffYn       },
-    */
-#define UkDebugScrSpeed     10
+#define UkDebugScrSpeed   10
     { DebugScrSpeed_v   , Default       , FnVoid          , FnVoid          , FnVoid          , FnVoid          , DebugScrSpeed   },
-    { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          },
+#define UkDebugScrDac     11
+    { FnVoid            , Default       , DebugScrDac_zm  , DebugScrDac_zp  , FnVoid          , Default         , DebugScrDac     },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          }
   };
   unsigned char __flash  PaswordF[InputSetup_CurPswLen] = { 3, 2, 4, 6, 1 };
@@ -148,6 +149,7 @@ namespace ns_menu
     scr->Clear();
     scr->F_String(0 , init_msg1);
     scr->F_String(16, init_msg2);
+    //DebugScrDac();
   }
   // ================================================================================================================
   void WaitWorkMode()
@@ -218,14 +220,14 @@ namespace ns_menu
     // ============
     if ( flLocLen )
     {
-        /*
+//        /*
       if (ns_izmlen::NewLen==0 && !DefaultFshow )
       {
         scr->F_String(0 , Default_msg3);
         scr->F_String(16, Default_msg4);
       }
       else
-          */
+//          */
       {
         // scr->F_String(0 , Default_msg1);
         scr->F_String(0 , vg::teleMsg);
@@ -375,7 +377,7 @@ namespace ns_menu
     }
   }
   // ================================================================================================================
-#define SetupLen 10
+#define SetupLen 11
   char __flash SetupMenu_msg1[] = "Menu:";
   char __flash  SetupMenuList[SetupLen][17] = {
      { "Distance to S1  " }
@@ -388,7 +390,7 @@ namespace ns_menu
     ,{ "Distance to S8  " }
     ,{ "Set new password" }
     ,{ "Debug scr speed " }
-    //,{ "Set K averaging " }
+    ,{ "Debug out DAC   " }
   };
   void SetupMenu()
   {
@@ -402,6 +404,27 @@ namespace ns_menu
     scr->F_String(0 , SetupMenu_msg1);
     SetupMenuInd = 0;
     SetupMenu_s();
+  }
+  void SetupMenu_time()
+  {
+      unsigned char tmp;
+      {
+          CritSec cs_tik;
+          tmp = vg::upTimeSN;
+      }
+      if (tmp)
+      {
+          {
+              CritSec cs_tak;
+              vg::upTimeSN = 0;
+          }
+          scr->F_Digit_u ( 6, 3, vg::upTimeD );
+          scr->F_Char    ( 9, 'd' );
+          scr->F_Digit_uz(10, 2, vg::upTimeH );
+          scr->F_Char    (12, 'h' );
+          scr->F_Digit_uz(13, 2, vg::upTimeM );
+          scr->F_Char    (15, 'm' );
+      }
   }
   void SetupMenu_s()
   {
@@ -442,6 +465,11 @@ namespace ns_menu
     if (SetupMenuInd==9)
     {
       DebugScrSpeed();
+      return;
+    }
+    if (SetupMenuInd==10)
+    {
+      DebugScrDac();
       return;
     }
   }
@@ -644,80 +672,47 @@ namespace ns_menu
     SetupMenu();
   }
 // ================================================================================================================
-  /*  
-  unsigned char koffTmp = 0;
-    char __flash SetKoff_msg1[] = "(V1+V2)/K  K=";
-    char __flash SetKoff_msg2[] = "can.  -  + enter";
-    char __flash SetKoff_msg3[] = "Save? (-/+)";
-    void SetKoff()
+    char __flash DebugScrDac_msg1[] = "Debug Out DAC";
+    char __flash DebugScrDac_msg2[] = "16000mm-20.000mA";
+    void DebugScrDac()
     {
-        koffTmp = vg::kf_usr;
-        step = UkSetKoff;
+        step = UkDebugScrDac;
+        znDac = 1000;
         scr->Clear();
-        scr->F_String(0            , SetKoff_msg1 );
-        scr->F_String(c_stolbcov+0 , SetKoff_msg2 );
-        SetKoff_v();
+        scr->F_String(0 , DebugScrDac_msg1 );
+        DebugScrDac_s();
         {
-          CritSec cs;
-          timeout_max = 120000;
-          timeout = timeout_max;
+            CritSec cs;
+            timeout_max = 120000;
+            timeout = timeout_max;
         }
-  }
-  void SetKoff_v()
-  {
-      scr->Char(13, '0'+(koffTmp/10)%10 );
-      scr->Char(14, '.' );
-      scr->Char(15, '0'+(koffTmp%10) );
-  }
-  void SetKoff_m()
-  {
-      SetupMenu();
-  }
-  void SetKoff_zm()
-  {
-      if (koffTmp<=15)
-          koffTmp = 15;
-      else
-          koffTmp--;
-      SetKoff_v();
-  }
-  void SetKoff_zp()
-  {
-      if (koffTmp>=25)
-          koffTmp = 25;
-      else
-          koffTmp++;
-      SetKoff_v();
-  }
-  void SetKoff_e()
-  {
-      SetKoffYn();
-  }
-  */
+    }
+    void DebugScrDac_s()
+    {
+        scr->F_String (16, DebugScrDac_msg2 );
+        scr->F_Digit_u(16, 5, znDac );
+        unsigned int tmp = znDac+4000; // 0-16000 to 4-20
+        scr->F_Digit_u (16+8, 2, tmp/1000 );
+        scr->F_Digit_uz(16+11, 3, tmp%1000 );
+        ad420_OutDac(znDac);
+    }
+    void DebugScrDac_zm()
+    {
+        unsigned int tmp = znDac/1000;
+        if ( tmp>0 )
+            tmp--;
+        znDac = tmp*1000;
+        DebugScrDac_s();
+    }
+    void DebugScrDac_zp()
+    {
+        unsigned int tmp = znDac/1000;
+        if ( tmp<16 )
+            tmp++;
+        znDac = tmp*1000;
+        DebugScrDac_s();
+    }
   // ===============================================================================================================
-  /*  
-  void SetKoffYn()
-    {
-        step = UkSetKoffYn;
-        scr->Clear();
-        scr->F_String(0            , SetKoff_msg1 );
-        scr->F_String(c_stolbcov+0 , SetKoff_msg3 );
-        {
-          CritSec cs;
-          timeout_max = 30000;
-          timeout = timeout_max;
-        }
-    }
-    void SetKoffYn_zm()
-    {
-        ExitSetup();
-    }
-    void SetKoffYn_zp()
-    {
-        vg::kf_usr = koffTmp;
-        ExitSetup();
-    }
-  */
   // ================================================================================================================
     void DebugScrSpeed()
     {

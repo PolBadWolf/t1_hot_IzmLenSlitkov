@@ -463,7 +463,7 @@ void tc_lcd::F_Digit_u (unsigned char poz, unsigned char len, unsigned  int cif)
     cif_low = cif % 10;
     if (poz1<0) poz1 = (c_strok*c_stolbcov)-1;
     if (poz1>=(c_strok*c_stolbcov) ) poz1 = 0;
-    if ( (i==0) || (cif_low>0) )
+    if ( (i==0) || (cif!=0) )
       screen[poz1--] = '0' + cif_low;
     else
       screen[poz1--] = ' ';
