@@ -268,14 +268,10 @@
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 116</file>
+          <file> 127 116 114</file>
         </tool>
       </outputs>
       <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 8 3 108 101 133 53 130 141 6 142 18 41 139 70 77 92 80 49 60 4 135 132 22 99 109</file>
-        </tool>
         <tool>
           <name>ICCAVR</name>
           <file> 8 3 108 101 133 53 130 141 6 142 18 41 139 70 77 92 80 49 60 4 135 132 22 99 109</file>
