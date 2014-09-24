@@ -85,7 +85,10 @@ namespace ns_menu
   void DebugScrDac_zp();
   void DebugScrDac();
   void DebugScrDac_s();
+  void DebugScrDac_zero();
+  void DebugScrDac_to();
   unsigned int znDac = 0;
+  
   /*
   void SetKoff();  
   void SetKoff_v();
@@ -131,7 +134,7 @@ namespace ns_menu
 #define UkDebugScrSpeed   10
     { DebugScrSpeed_v   , Default       , FnVoid          , FnVoid          , FnVoid          , FnVoid          , DebugScrSpeed   },
 #define UkDebugScrDac     11
-    { FnVoid            , Default       , DebugScrDac_zm  , DebugScrDac_zp  , FnVoid          , Default         , DebugScrDac     },
+    { FnVoid            , Default       , DebugScrDac_zm  , DebugScrDac_zp  , DebugScrDac_zero, DebugScrDac_to  , DebugScrDac     },
     { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          }
   };
   unsigned char __flash  PaswordF[InputSetup_CurPswLen] = { 3, 2, 4, 6, 1 };
@@ -694,13 +697,16 @@ namespace ns_menu
         unsigned int tmp = znDac+4000; // 0-16000 to 4-20
         scr->F_Digit_u (16+8, 2, tmp/1000 );
         scr->F_Digit_uz(16+11, 3, tmp%1000 );
-        ad420_OutDac(0);
-        ns_wdogtimer::reset();
-        _delay_ms(1000);
-        ns_wdogtimer::reset();
-        _delay_ms(1000);
-        ns_wdogtimer::reset();
         ad420_OutDac(znDac);
+    }
+    void DebugScrDac_to()
+    {
+        DebugScrDac_zero();
+        Default();
+    }
+    void DebugScrDac_zero()
+    {
+        ad420_OutDac(0);
     }
     void DebugScrDac_zm()
     {

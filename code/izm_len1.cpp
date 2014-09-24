@@ -311,7 +311,8 @@ namespace ns_izmlen1
                 // error - reset izmer & 
                 datTimeFlagReg = 0;
                 WarningEnabled();
-                eventMassStep = InitWaitFreeSensors;
+                //eventMassStep = InitWaitFreeSensors;
+                eventMassStep = IzmRender;
             }
         }
     }
