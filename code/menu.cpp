@@ -694,6 +694,12 @@ namespace ns_menu
         unsigned int tmp = znDac+4000; // 0-16000 to 4-20
         scr->F_Digit_u (16+8, 2, tmp/1000 );
         scr->F_Digit_uz(16+11, 3, tmp%1000 );
+        ad420_OutDac(0);
+        ns_wdogtimer::reset();
+        _delay_ms(1000);
+        ns_wdogtimer::reset();
+        _delay_ms(1000);
+        ns_wdogtimer::reset();
         ad420_OutDac(znDac);
     }
     void DebugScrDac_zm()
