@@ -388,6 +388,14 @@ object Form1: TForm1
     Height = 21
     TabOrder = 27
   end
+  object Edit_kspeed: TEdit
+    Left = 672
+    Top = 304
+    Width = 121
+    Height = 21
+    TabOrder = 28
+    Text = '5'
+  end
   object TimerRender: TTimer
     Enabled = False
     Interval = 20

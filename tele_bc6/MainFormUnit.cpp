@@ -448,10 +448,10 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
                 int l = _Sens.sensor[d2].position-_Sens.sensor[d1].position;
                 int tB = _Sens.sensor[d2].timeBegin-_Sens.sensor[d1].timeBegin;
                 int tE = _Sens.sensor[d2].timeEnd-_Sens.sensor[d1].timeEnd;
-                SpeedB[n-1]->Text = (float)l/tB;
+                SpeedB[n-1]->Text = (float)l*Edit_kspeed->Text.ToInt()/tB;
                 int sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedB[n-1]->Width;
                 SpeedB[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
-                SpeedE[n-1]->Text = (float)l/tE;
+                SpeedE[n-1]->Text = (float)l*Edit_kspeed->Text.ToInt()/tE;
                 sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedE[n-1]->Width;
                 SpeedE[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
         }

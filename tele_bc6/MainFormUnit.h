@@ -63,6 +63,7 @@ __published:	// IDE-managed Components
         TSaveDialog *SaveDialog1;
         TSpeedButton *SpeedButton1;
         TShape *Shape9;
+        TEdit *Edit_kspeed;
         void __fastcall Button2Click(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
         void __fastcall TimerRenderTimer(TObject *Sender);
