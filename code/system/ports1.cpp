@@ -7,7 +7,7 @@ tc_ports1<unsigned char>::tc_ports1(unsigned char PortName, unsigned char PortBi
 {
   Tag = 0;
   Event = 0;
-  Porog = Nintegr;
+  Porog = (unsigned long)Nintegr*ftUserTimer/1000;
   inv = false;
   switch (PortName)
   {
@@ -41,7 +41,7 @@ tc_ports1<unsigned int >::tc_ports1(unsigned char PortName, unsigned char PortBi
 {
   Tag = 0;
   Event = 0;
-  Porog = Nintegr;
+  Porog = (unsigned long)Nintegr*ftUserTimer/1000;
   inv = false;
   switch (PortName)
   {
@@ -76,7 +76,7 @@ tc_ports1<unsigned char>::tc_ports1(unsigned char PortName, unsigned char PortBi
 {
   Tag = tag;
   Event = *pEvent;
-  Porog = Nintegr;
+  Porog = (unsigned long)Nintegr*ftUserTimer/1000;
   inv = false;
   switch (PortName)
   {
@@ -110,7 +110,7 @@ tc_ports1<unsigned int >::tc_ports1(unsigned char PortName, unsigned char PortBi
 {
   Tag = tag;
   Event = *pEvent;
-  Porog = Nintegr;
+  Porog = (unsigned long)Nintegr*ftUserTimer/1000;
   inv = false;
   switch (PortName)
   {

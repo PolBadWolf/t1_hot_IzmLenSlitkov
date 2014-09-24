@@ -28,7 +28,7 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
     <USERDEFINES value="_DEBUG"/>
-    <SYSDEFINES value="NO_STRICT"/>
+    <SYSDEFINES value="NO_STRICT;_RTLDLL"/>
     <MAINSOURCE value="Tele.cpp"/>
     <INCLUDEPATH value="crc;CommPort1;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;D:\GitHub\t1_hot_IzmLenSlitkov\tele_bc6;$(BCB)\include;$(BCB)\include\vcl"/>
     <LIBPATH value="crc;CommPort1;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;D:\GitHub\t1_hot_IzmLenSlitkov\tele_bc6;$(BCB)\lib\obj;$(BCB)\lib"/>
@@ -44,13 +44,13 @@
     <PFLAGS value="-$YD -$W -$O- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zi"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
-    <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
+    <ALLOBJ value="c0w32.obj Memmgr.Lib sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mti.lib"/>
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>

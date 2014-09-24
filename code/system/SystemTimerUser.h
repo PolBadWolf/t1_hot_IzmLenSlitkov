@@ -3,7 +3,7 @@
 #define SystemTimerUser__h
 #ifdef USERTIMERUSER
 // частота таймера
-#define ftUserTimer 1000
+#define ftUserTimer 5000
 namespace ns_TimerUser
 {
   void Init(void);

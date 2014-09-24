@@ -51,19 +51,27 @@ namespace ns_izmlen1
     void InitWaitFreeSensorsMain();
     // =========================================================================
     // wait free sensors
-#define waitFreeSensorsTimeOut 180000
+#define waitFreeSensorsTimeOut 180*ftUserTimer
 #if (waitFreeSensorsTimeOut<256)
-    unsigned char waitFreeSensorsTime;
+    #define waitFreeSensorsTimeDef unsigned char
 #elif (waitFreeSensorsTimeOut<65536)
-    unsigned int  waitFreeSensorsTime;
+    #define waitFreeSensorsTimeDef unsigned int
 #else
-    unsigned long waitFreeSensorsTime;
+    #define waitFreeSensorsTimeDef unsigned long
 #endif
+    waitFreeSensorsTimeDef waitFreeSensorsTime;
     void WaitFreeSensorsMain();
     void WaitFreeSensorsTimer();
     // =========================================================================
-#define izmSensorsTimeOutMax 15000
-    unsigned int izmSensorsTimeOut = izmSensorsTimeOutMax;
+#define izmSensorsTimeOutMax 15*ftUserTimer
+#if (izmSensorsTimeOutMax<256)
+    #define izmSensorsTimeOutDef unsigned char
+#elif (izmSensorsTimeOutMax<65536)
+    #define izmSensorsTimeOutDef unsigned int
+#else
+    #define izmSensorsTimeOutDef unsigned long
+#endif
+    izmSensorsTimeOutDef izmSensorsTimeOut = (izmSensorsTimeOutDef)izmSensorsTimeOutMax;
     void IzmBeginTimer();
     void WaitEndIzmTimer();
     void WaitEndIzmMain();
@@ -79,7 +87,7 @@ namespace ns_izmlen1
     void IzmRenderMain();
     // =========================================================================
     unsigned int outDacCount;
-#define outDacCountMax 5000
+#define outDacCountMax 5*ftUserTimer
     void InitOutDacMain();
     void WaitEndOutDacTimer();
     // =========================================================================
@@ -195,7 +203,7 @@ namespace ns_izmlen1
             }
             if (ok)
             {
-                izmSensorsTimeOut = izmSensorsTimeOutMax;
+                izmSensorsTimeOut = (izmSensorsTimeOutDef)izmSensorsTimeOutMax;
                 // reg time event sensor
                 datTimeMassive[tag][level] = datTime;
                 // mask working sensors
@@ -216,7 +224,7 @@ namespace ns_izmlen1
     void InitWaitFreeSensorsMain()
     {
         // set max timeout
-        waitFreeSensorsTime = waitFreeSensorsTimeOut;
+        waitFreeSensorsTime = (waitFreeSensorsTimeDef)waitFreeSensorsTimeOut;
         // wait free sensors
         eventMassStep = WaitFreeSensors;
     }
@@ -437,18 +445,19 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             unsigned int base;
             unsigned int offSet;
-            base   =     vg::rs_Dat[map[u]]   -    vg::rs_Dat[map[d]];
-            offSet = datTimeMassive[map[d]][1]-datTimeMassive[map[u]][0];
             unsigned char sB,   sE;
             unsigned int  sLen, sTime;
+            base   =     vg::rs_Dat[map[u]]   -    vg::rs_Dat[map[d]];
+            offSet = datTimeMassive[map[d]][1]-datTimeMassive[map[u]][0];
             speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+            offSet = ((unsigned long)offSet*sLen/sTime);
             mss[mss_max].napr   = 1;
             mss[mss_max].fist   = d;
             mss[mss_max].next   = u;
             mss[mss_max].sFist  = sB;
             mss[mss_max].sNext  = sE;
             mss[mss_max].dochet = offSet;
-            mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+            mss[mss_max].Len    = base+offSet;
             mss[mss_max].pm     = 1; // +
             mss_max++;
             if ( mss_max>=st_mss_lim ) stat = 1;
@@ -459,27 +468,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[d  ]][1]> datTimeMassive[map[u-1]][0])
-                                             &&
-                 (datTimeMassive[map[d  ]][1]<=datTimeMassive[map[u  ]][0])
-                )
             {
                 unsigned int base;
                 unsigned int offSet;
-                base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
+                base   = vg::rs_Dat[map[u-1]] - vg::rs_Dat[map[d  ]];
+                speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
                     mss[mss_max].napr   = 3;
                     mss[mss_max].fist   = d;
                     mss[mss_max].next   = u-1;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base+offSet;
                     mss[mss_max].pm     = 1; // +
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -492,27 +498,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[d  ]][1]> datTimeMassive[map[u-1]][0])
-                                             &&
-                 (datTimeMassive[map[d  ]][1]<=datTimeMassive[map[u  ]][0])
-                )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
+                speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
                     mss[mss_max].napr   = 4;
                     mss[mss_max].fist   = d;
                     mss[mss_max].next   = u;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base-offSet;
                     mss[mss_max].pm     = 2; // -
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -525,27 +528,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[u  ]][0]> datTimeMassive[map[d  ]][1])
-                                             &&
-                 (datTimeMassive[map[u  ]][1]<=datTimeMassive[map[d+1]][1])
-                )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
+                speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
                     mss[mss_max].napr   = 5;
                     mss[mss_max].fist   = d;
                     mss[mss_max].next   = u;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base-offSet;
                     mss[mss_max].pm     = 2; // -
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -558,27 +558,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[u  ]][0]> datTimeMassive[map[d  ]][1])
-                                             &&
-                 (datTimeMassive[map[u  ]][0]<=datTimeMassive[map[d+1]][1])
-               )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
+                speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
                     mss[mss_max].napr   = 6;
                     mss[mss_max].fist   = d+1;
                     mss[mss_max].next   = u;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base+offSet;
                     mss[mss_max].pm     = 1; // +
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -591,27 +588,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[d  ]][1]> datTimeMassive[map[u-1]][0])
-//                                             &&
-//                 (datTimeMassive[map[u  ]][0]<=datTimeMassive[map[d+1]][1])
-               )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
+                speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
                     mss[mss_max].napr   = 7;
                     mss[mss_max].fist   = d;
                     mss[mss_max].next   = u-1;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base+offSet;
                     mss[mss_max].pm     = 1; // +
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -624,27 +618,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( ((d-1)<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[u-1]][0]> datTimeMassive[map[d-1]][1])
-                                             &&
-                 (datTimeMassive[map[u-1]][0]<=datTimeMassive[map[d  ]][1])
-               )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d-1]];
                 offSet = datTimeMassive[map[u-1]][0]-datTimeMassive[map[d-1]][1];
+                speedSelect(d-1, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d-1, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
                     mss[mss_max].napr   = 8;
                     mss[mss_max].fist   = d-1;
                     mss[mss_max].next   = u-1;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base-offSet;
                     mss[mss_max].pm     = 2; // -
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -657,27 +648,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[d+1]][1]> datTimeMassive[map[u  ]][0])
-//                                             &&
-//                 (datTimeMassive[map[d+1]][1]<=datTimeMassive[map[u+1]][0])
-               )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
+                speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
                     mss[mss_max].napr   = 9;
                     mss[mss_max].fist   = d+1;
                     mss[mss_max].next   = u;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base+offSet;
                     mss[mss_max].pm     = 1; // +
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -690,27 +678,24 @@ namespace ns_izmlen1
             if ( mss_max>=st_mss_lim )   return 2;
             if ( (d<0) || ((u+1)>=maxn)  )   return 0;
             unsigned char stat = 0;
-            if ( (datTimeMassive[map[d+1]][1]> datTimeMassive[map[u  ]][0])
-                                             &&
-                 (datTimeMassive[map[d+1]][1]<=datTimeMassive[map[u+1]][0])
-               )
             {
                 unsigned int base;
                 unsigned int offSet;
+                unsigned char sB,   sE;
+                unsigned int  sLen, sTime;
                 base   =     vg::rs_Dat[map[u+1]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[u+1]][0]-datTimeMassive[map[d+1]][1];
+                speedSelect(d+1, u+1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                offSet = ((unsigned long)offSet*sLen/sTime);
                 if ( offSet<base )
                 {
-                    unsigned char sB,   sE;
-                    unsigned int  sLen, sTime;
-                    speedSelect(d+1, u+1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
                     mss[mss_max].napr   = 10;
                     mss[mss_max].fist   = d+1;
                     mss[mss_max].next   = u+1;
                     mss[mss_max].sFist  = sB;
                     mss[mss_max].sNext  = sE;
                     mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-((unsigned long)offSet*sLen/sTime);
+                    mss[mss_max].Len    = base-offSet;
                     mss[mss_max].pm     = 2; // -
                     mss_max++;
                     if ( mss_max>=st_mss_lim ) stat = 1;
@@ -768,7 +753,7 @@ namespace ns_izmlen1
             }
             else
             {   // small tube
-                for (unsigned char sd=0; sd<(maxn-2); sd++)
+                for (unsigned char sd=0; sd<(maxn-1); sd++)
                 {
                     // buff over
                     if ( mss_max>=st_mss_lim ) break;
@@ -780,12 +765,12 @@ namespace ns_izmlen1
                             continue;
                         if ( saveRender1(sd, su, maxn) ) break;
                         if ( saveRender2(sd, su, maxn) ) break;
-                        if ( saveRender3(sd, su, maxn) ) break;
+                        //if ( saveRender3(sd, su, maxn) ) break;
                         if ( saveRender4(sd, su, maxn) ) break;
-                        if ( saveRender5(sd, su, maxn) ) break;
+                        //if ( saveRender5(sd, su, maxn) ) break;
                         if ( saveRender6(sd, su, maxn) ) break;
-                        if ( saveRender7(sd, su, maxn) ) break;
-                        if ( saveRender8(sd, su, maxn) ) break;
+                        //if ( saveRender7(sd, su, maxn) ) break;
+                        //if ( saveRender8(sd, su, maxn) ) break;
                         //break;
                     }
                 }

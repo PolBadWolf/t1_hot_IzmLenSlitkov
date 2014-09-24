@@ -2,7 +2,7 @@
 #ifndef izm_len1__h
 #define izm_len1__h
 
-#define izmLen_TimeOut 80000
+#define izmLen_TimeOut 8*ftUserTimer
 #define izmLen_DatPorog 60
 
 #if   (izmLen_DatPorog<256)

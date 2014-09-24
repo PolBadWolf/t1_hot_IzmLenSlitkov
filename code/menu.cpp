@@ -778,7 +778,9 @@ namespace ns_izmlen
                 else
                 {
                     len = vg::rs_Dat[i]-vg::rs_Dat[i-1];
-                    speed = len*10/dTime;
+//                    speed = len*10/dTime;
+                    speed = (len*ftUserTimer)/(dTime*10);
+                    speed = (speed+5)/10;
                     scr->F_Char(p+0, ' ' );
                     scr->F_Char(p+1, '0'+(speed/10)%10 );
                     scr->F_Char(p+2, '0'+(speed%10) );
@@ -798,10 +800,14 @@ namespace ns_izmlen
                 else
                 {
                     len = vg::rs_Dat[i]-vg::rs_Dat[i-1];
-                    speed = len*10/dTime;
+//                    speed = len*10/dTime;
+                    speed = (len*ftUserTimer)/(dTime*10);
+                    speed = (speed+5)/10;
+                    scr->F_Digit_u ( p, 3, (unsigned char)speed );
+                    /*
                     scr->F_Char(p+0, ' ' );
                     scr->F_Char(p+1, '0'+(speed/10)%10 );
-                    scr->F_Char(p+2, '0'+(speed%10) );
+                    scr->F_Char(p+2, '0'+(speed%10) );*/
                 }
             }
         }

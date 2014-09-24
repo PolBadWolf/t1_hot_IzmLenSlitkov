@@ -323,6 +323,11 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
                 StringGrid1->Cells[stlb+1][1] = IntToStr(_Sens.sensor[stlb].position);
                 StringGrid1->Cells[stlb+1][2] = IntToStr(_Sens.sensor[stlb].timeBegin);
                 StringGrid1->Cells[stlb+1][3] = IntToStr(_Sens.sensor[stlb].timeEnd);
+                if (stlb<7)
+                {
+                        SpeedB[stlb]->Left = -SpeedB[stlb]->Width-50;
+                        SpeedE[stlb]->Left = -SpeedE[stlb]->Width-50;
+                }
         }
         // ===========================
         // position
@@ -435,6 +440,7 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
         //L_OffSet->Caption = _Sens.offset;
         L_OffSet->Caption = dochet;
         Label1->Caption = _Sens.len;
+        // speed
         for (int n=1; n<mapIi; n++)
         {
                 int d1 = mapI[n-1];
