@@ -878,6 +878,7 @@ namespace ns_izmlen1
     {
         const unsigned char simLen = 6;
         unsigned char IdxLen;
+        unsigned int fTik = ftUserTimer;
         const unsigned char massSendLen = 
               sizeof(unsigned char) // 0xe6
             + sizeof(unsigned char) // code
@@ -889,6 +890,7 @@ namespace ns_izmlen1
             + 7                     // fist, next, napr, sFist, sNext, dochet
             + sizeof(vg::rs_Dat)
             + sizeof(datTimeMassive)
+            + sizeof(fTik)          // f tik
             + sizeof(unsigned char) // crc
             ;
             unsigned char massSend[massSendLen];
@@ -958,6 +960,11 @@ namespace ns_izmlen1
                     massSend[massSendIdx++] = ((unsigned char *)&datTimeMassive[n][l])[b];
                 }
             }
+        }
+        // f tik
+        for (unsigned char b=0; b<sizeof(fTik); b++)
+        {
+            massSend[massSendIdx++] = ((unsigned char *)&fTik)[b];
         }
         massSend[IdxLen] = massSendIdx+1;
         // crc

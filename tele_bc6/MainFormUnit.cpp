@@ -169,6 +169,12 @@ void __fastcall TForm1::BbSaveData()
                         ((unsigned char*)&sTimeEnd[i])[b] = bBuff[(4*i)+b+67];
                 }
         }
+        int fTik = 0;
+        for (int b=0; b<2; b++)
+        {
+                ((unsigned char*)&fTik)[b] = bBuff[b+99];
+        }
+        Edit_Fspeed->Text = fTik;
         // crc - 99
         //-------------------------------------------------------------------
         /*
@@ -457,14 +463,14 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
                 int tB = _Sens.sensor[d2].timeBegin-_Sens.sensor[d1].timeBegin;
                 int tE = _Sens.sensor[d2].timeEnd-_Sens.sensor[d1].timeEnd;
 
-                try {speedTmp = (double)l*Edit_kspeed->Text.ToInt()/tB;}
+                try {speedTmp = (double)l*Edit_Fspeed->Text.ToInt()/(tB*1000);}
                 catch(...) {speedTmp=-1;}
                 if (speedTmp>0) SpeedB[n-1]->Text = FloatToStr(speedTmp);
                 else            SpeedB[n-1]->Text ="---";
                 int sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedB[n-1]->Width;
                 SpeedB[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
 
-                try {speedTmp = (double)l*Edit_kspeed->Text.ToInt()/tE;}
+                try {speedTmp = (double)l*Edit_Fspeed->Text.ToInt()/(tE*1000);}
                 catch(...) {speedTmp=-1;}
                 if (speedTmp>0) SpeedE[n-1]->Text = FloatToStr(speedTmp);
                 else            SpeedE[n-1]->Text = "---";

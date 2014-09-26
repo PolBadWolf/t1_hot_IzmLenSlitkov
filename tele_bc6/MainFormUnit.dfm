@@ -388,11 +388,12 @@ object Form1: TForm1
     Height = 21
     TabOrder = 27
   end
-  object Edit_kspeed: TEdit
+  object Edit_Fspeed: TEdit
     Left = 672
     Top = 304
     Width = 121
     Height = 21
+    ReadOnly = True
     TabOrder = 28
     Text = '5'
   end

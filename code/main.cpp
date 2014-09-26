@@ -13,7 +13,7 @@ void main(void)
     void InitSystem(void);
     InitSystem();
   }
-  
+ /* 
 //    ns_izmlen1::SendDebug();
   ns_izmlen1::datTimeMassive[0][0] = 1;
   ns_izmlen1::datTimeMassive[0][1] = 24305;
@@ -32,7 +32,7 @@ void main(void)
   ns_izmlen1::datTimeMassive[7][0] = 29238;
   ns_izmlen1::datTimeMassive[7][1] = 0;
     ns_izmlen1::IzmRenderMain();
-   
+  */ 
   _delay_ms(1000);
 //  scr->F_Digit_uz( (unsigned char)0, (unsigned char)4, (unsigned int)1234);
   __enable_interrupt();
