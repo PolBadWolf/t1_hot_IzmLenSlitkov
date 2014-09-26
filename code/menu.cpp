@@ -88,21 +88,14 @@ namespace ns_menu
   void DebugScrDac_zero();
   void DebugScrDac_to();
   unsigned int znDac = 0;
-  
-  /*
-  void SetKoff();  
-  void SetKoff_v();
-  void SetKoff_m();
-  void SetKoff_zm();
-  void SetKoff_zp();
-  void SetKoff_e();
-  */
   // ================================================================================================================
-/*
-  void SetKoffYn();
-    void SetKoffYn_zm();
-    void SetKoffYn_zp();
-  */
+  void LevelSpeed();
+  void LevelSpeed_v();
+  void LevelSpeed_zm();
+  void LevelSpeed_zp();
+  void LevelSpeedYn();
+  void LevelSpeedYn_zm();
+  void LevelSpeedYn_zp();
   // ================================================================================================================
     void DebugScrSpeed();
     void DebugScrSpeed_v();
@@ -135,7 +128,11 @@ namespace ns_menu
     { DebugScrSpeed_v   , Default       , FnVoid          , FnVoid          , FnVoid          , FnVoid          , DebugScrSpeed   },
 #define UkDebugScrDac     11
     { FnVoid            , Default       , DebugScrDac_zm  , DebugScrDac_zp  , DebugScrDac_zero, DebugScrDac_to  , DebugScrDac     },
-    { FnVoid            , FnVoid        , FnVoid          , FnVoid          , FnVoid          , FnVoid          , FnVoid          }
+#define UkLevelSpeed      12
+    { FnVoid            , SetupMenu     , LevelSpeed_zm   , LevelSpeed_zp   , LevelSpeedYn    , Default         , LevelSpeed      },
+#define UkLevelSpeedYn    13
+    { FnVoid            , FnVoid        , LevelSpeedYn_zm , LevelSpeedYn_zp , FnVoid          , Default         , LevelSpeedYn    },
+    { FnVoid            , FnVoid        , FnVoid,           FnVoid,           FnVoid          , FnVoid          , FnVoid          }
   };
   unsigned char __flash  PaswordF[InputSetup_CurPswLen] = { 3, 2, 4, 6, 1 };
   // ================================================================================================================
@@ -380,7 +377,7 @@ namespace ns_menu
     }
   }
   // ================================================================================================================
-#define SetupLen 11
+#define SetupLen 12
   char __flash SetupMenu_msg1[] = "Menu:";
   char __flash  SetupMenuList[SetupLen][17] = {
      { "Distance to S1  " }
@@ -391,9 +388,10 @@ namespace ns_menu
     ,{ "Distance to S6  " }
     ,{ "Distance to S7  " }
     ,{ "Distance to S8  " }
-    ,{ "Set new password" }
     ,{ "Debug scr speed " }
     ,{ "Debug out DAC   " }
+    ,{ "Set %level speed" }
+    ,{ "Set new password" }
   };
   void SetupMenu()
   {
@@ -455,7 +453,7 @@ namespace ns_menu
   }
   void SetupMenu_i()
   {
-    if (SetupMenuInd==8)
+    if (SetupMenuInd==11)
     {
       SetPassword();
       return;
@@ -465,14 +463,19 @@ namespace ns_menu
       SetSensor();
       return;
     }
-    if (SetupMenuInd==9)
+    if (SetupMenuInd==8)
     {
       DebugScrSpeed();
       return;
     }
-    if (SetupMenuInd==10)
+    if (SetupMenuInd==9)
     {
       DebugScrDac();
+      return;
+    }
+    if (SetupMenuInd==10)
+    {
+      LevelSpeed();
       return;
     }
   }
@@ -738,13 +741,6 @@ namespace ns_menu
         DefaultFshow = 1;
         DebugScrSpeed_v();
     }
-/*
-  // time massive
-namespace ns_izmlen
-{
-                extern unsigned long datTimeMassive[8][2];
-}
-*/
     void DebugScrSpeed_v()
     {
         unsigned char flLocLen = 0, flLocSen = 0;
@@ -825,6 +821,65 @@ namespace ns_izmlen
         }
     }
   // ================================================================================================================
+    unsigned int levelSpeedTmp;
+    char __flash levelSpeed_msg1[] = "Sub Speed";
+    char __flash levelSpeed_msg2[] = "level=200.0%";
+    void LevelSpeed()
+    {
+        step = UkLevelSpeed;
+        {
+          CritSec cs;
+          timeout_max = 60000;
+          timeout = timeout_max;
+        }
+        scr->Clear();
+        scr->F_String ( 0, levelSpeed_msg1);
+        scr->F_String (16, levelSpeed_msg2);
+        levelSpeedTmp = vg::prcPorog;
+        LevelSpeed_v();
+    }
+    void LevelSpeed_v()
+    {
+        scr->F_Digit_u (22, 3, (unsigned int)levelSpeedTmp/10 );
+        scr->F_Char    (26, '0'+(levelSpeedTmp%10) );
+    }
+    void LevelSpeed_zm()
+    {
+        if (levelSpeedTmp>25)  // 2.5%
+        {
+            levelSpeedTmp--;
+            LevelSpeed_v();
+        }
+    }
+    void LevelSpeed_zp()
+    {
+        if (levelSpeedTmp<4000) // 400.0%
+        {
+            levelSpeedTmp++;
+            LevelSpeed_v();
+        }
+    }
+    char __flash levelSpeedYn_msg1[] = "Save? (-/+)";
+    void LevelSpeedYn()
+    {
+        step = UkLevelSpeedYn;
+        scr->Clear();
+        scr->F_String(16 , levelSpeedYn_msg1 );
+        {
+          CritSec cs;
+          timeout_max = 30000;
+          timeout = timeout_max;
+        }
+    }
+    void LevelSpeedYn_zp()
+    {
+        vg::prcPorog = levelSpeedTmp;
+        ExitSetup();
+    }
+    void LevelSpeedYn_zm()
+    {
+        SetupMenu();
+    }
   // ================================================================================================================
   // ================================================================================================================
   // ================================================================================================================

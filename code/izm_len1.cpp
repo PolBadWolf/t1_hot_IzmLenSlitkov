@@ -470,25 +470,28 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
-                base   = vg::rs_Dat[map[u-1]] - vg::rs_Dat[map[d  ]];
-                speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 3;
-                    mss[mss_max].fist   = d;
-                    mss[mss_max].next   = u-1;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+offSet;
-                    mss[mss_max].pm     = 1; // +
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
+                    speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 3;
+                        mss[mss_max].fist   = d;
+                        mss[mss_max].next   = u-1;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base+offSet;
+                        mss[mss_max].pm     = 1; // +
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -500,55 +503,28 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
-                speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 4;
-                    mss[mss_max].fist   = d;
-                    mss[mss_max].next   = u;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-offSet;
-                    mss[mss_max].pm     = 2; // -
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
-                }
-            }
-            return stat;
-        }
-        unsigned char saveRender3(signed char d, signed char u, unsigned char maxn)
-        {
-            if ( mss_max>=st_mss_lim )   return 2;
-            if ( (d<0) || (u>=maxn)  )   return 0;
-            unsigned char stat = 0;
-            {
-                unsigned int base;
-                unsigned int offSet;
-                unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
-                offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
-                speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
-                {
-                    mss[mss_max].napr   = 5;
-                    mss[mss_max].fist   = d;
-                    mss[mss_max].next   = u;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-offSet;
-                    mss[mss_max].pm     = 2; // -
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
+                    speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 4;
+                        mss[mss_max].fist   = d;
+                        mss[mss_max].next   = u;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base-offSet;
+                        mss[mss_max].pm     = 2; // -
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -560,25 +536,28 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
-                speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)*10;
-                if ( offSet<base )
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 6;
-                    mss[mss_max].fist   = d+1;
-                    mss[mss_max].next   = u;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+offSet;
-                    mss[mss_max].pm     = 1; // +
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
+                    speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)*10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 6;
+                        mss[mss_max].fist   = d+1;
+                        mss[mss_max].next   = u;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base+offSet;
+                        mss[mss_max].pm     = 1; // +
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -590,25 +569,28 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
-                offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
-                speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
+                offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u  ]][0];
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 7;
-                    mss[mss_max].fist   = d;
-                    mss[mss_max].next   = u-1;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+offSet;
-                    mss[mss_max].pm     = 1; // +
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
+                    speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 7;
+                        mss[mss_max].fist   = d;
+                        mss[mss_max].next   = u;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base+offSet;
+                        mss[mss_max].pm     = 1; // +
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -620,25 +602,28 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d-1]];
                 offSet = datTimeMassive[map[u-1]][0]-datTimeMassive[map[d-1]][1];
-                speedSelect(d-1, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 8;
-                    mss[mss_max].fist   = d-1;
-                    mss[mss_max].next   = u-1;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-offSet;
-                    mss[mss_max].pm     = 2; // -
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d-1]];
+                    speedSelect(d-1, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 8;
+                        mss[mss_max].fist   = d-1;
+                        mss[mss_max].next   = u-1;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base-offSet;
+                        mss[mss_max].pm     = 2; // -
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -650,25 +635,28 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
-                speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 9;
-                    mss[mss_max].fist   = d+1;
-                    mss[mss_max].next   = u;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base+offSet;
-                    mss[mss_max].pm     = 1; // +
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
+                    speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 9;
+                        mss[mss_max].fist   = d+1;
+                        mss[mss_max].next   = u;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base+offSet;
+                        mss[mss_max].pm     = 1; // +
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -683,22 +671,25 @@ namespace ns_izmlen1
                 unsigned int offSet;
                 unsigned char sB,   sE;
                 unsigned int  sLen, sTime;
-                base   =     vg::rs_Dat[map[u+1]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[u+1]][0]-datTimeMassive[map[d+1]][1];
-                speedSelect(d+1, u+1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
-                if ( offSet<base )
+                if (offSet>0)
                 {
-                    mss[mss_max].napr   = 10;
-                    mss[mss_max].fist   = d+1;
-                    mss[mss_max].next   = u+1;
-                    mss[mss_max].sFist  = sB;
-                    mss[mss_max].sNext  = sE;
-                    mss[mss_max].dochet = offSet;
-                    mss[mss_max].Len    = base-offSet;
-                    mss[mss_max].pm     = 2; // -
-                    mss_max++;
-                    if ( mss_max>=st_mss_lim ) stat = 1;
+                    base   =     vg::rs_Dat[map[u+1]]   -    vg::rs_Dat[map[d+1]];
+                    speedSelect(d+1, u+1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
+                    offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
+                    if ( offSet<base )
+                    {
+                        mss[mss_max].napr   = 10;
+                        mss[mss_max].fist   = d+1;
+                        mss[mss_max].next   = u+1;
+                        mss[mss_max].sFist  = sB;
+                        mss[mss_max].sNext  = sE;
+                        mss[mss_max].dochet = offSet;
+                        mss[mss_max].Len    = base-offSet;
+                        mss[mss_max].pm     = 2; // -
+                        mss_max++;
+                        if ( mss_max>=st_mss_lim ) stat = 1;
+                    }
                 }
             }
             return stat;
@@ -745,7 +736,7 @@ namespace ns_izmlen1
                         }
                         prcn = (signed long)(speed1*1000/speed2);
                         prcn = prcn-1000;
-                        if ( prcn<100 )
+                        if ( prcn<vg::prcPorog )
                             ok = true;
 
                     }
@@ -785,13 +776,14 @@ namespace ns_izmlen1
                     {
                         // buff over
                         if ( mss_max>=st_mss_lim ) break;
-                        if ( datTimeMassive[map[sd]][1]>datTimeMassive[map[su]][0] )
+                        if ( (datTimeMassive[map[sd]][1]>datTimeMassive[map[su]][0])
+                          && (su<(maxn-1))
+                           )
                             continue;
                         if ( saveRender1(sd, su, maxn) ) break;
                         if ( saveRender2(sd, su, maxn) ) break;
-                        //if ( saveRender3(sd, su, maxn) ) break;
                         if ( saveRender4(sd, su, maxn) ) break;
-                        //if ( saveRender5(sd, su, maxn) ) break;
+                        if ( saveRender5(sd, su, maxn) ) break;
                         if ( saveRender6(sd, su, maxn) ) break;
                         //if ( saveRender7(sd, su, maxn) ) break;
                         //if ( saveRender8(sd, su, maxn) ) break;
@@ -799,17 +791,42 @@ namespace ns_izmlen1
                     }
                 }
             }
-            // select min adding
+            // sort min offset 
+            st_mss tmpSort;
+//            unsigned char minN = mss_max-1;
             {
-                st_mss tmpSort;
-                bool   flSort = true;
+                bool flSort;
+                // sort min offset 
+                flSort = true;
                 while (flSort)
                 {
                     flSort = false;
-                    for (unsigned char n=1;n<mss_max;n++)
+                    for (unsigned char n=1; n<mss_max; n++)
                     {
-                        if ( (mss[n-1].dochet>mss[n].dochet)
-//                        && (  mss[n].dochet<(
+                        if ( mss[n-1].dochet>mss[n].dochet )
+                        {
+                            tmpSort = mss[n-1];
+                            mss[n-1] = mss[n];
+                            mss[n] = tmpSort;
+                            flSort = true;
+                            break;
+                        }
+                    }
+                }
+                // sort min offset & min len for speed
+                flSort = true;
+//                signed int xxx;
+//                xxx = vg::rs_Dat[map[mss[1].sNext]]-vg::rs_Dat[map[mss[1].sFist]];
+//                xxx = vg::rs_Dat[map[mss[1].sFist]];
+                while (flSort)
+                {
+                    flSort = false;
+                    for (unsigned char n=1; n<mss_max; n++)
+                    {
+                        if ( (mss[n-1].dochet>(mss[n].dochet-50))
+//                          && (mss[n-1].dochet>(mss[n].
+                          && ( (vg::rs_Dat[map[mss[n-1].sNext]]-vg::rs_Dat[map[mss[n-1].sFist]])
+                              > (vg::rs_Dat[map[mss[n  ].sNext]]-vg::rs_Dat[map[mss[n  ].sFist]]) )
                            )
                         {
                             tmpSort = mss[n-1];
@@ -851,19 +868,19 @@ namespace ns_izmlen1
                         }
                         */
             }
-            
+            tmpSort = mss[0];
             // render
-            vg::teleMsg[0] = map[mss[0].fist]  + '0';
-            vg::teleMsg[1] = map[mss[0].next]  + '0';
+            vg::teleMsg[0] = map[tmpSort.fist]  + '0';
+            vg::teleMsg[1] = map[tmpSort.next]  + '0';
             vg::teleMsg[2] = '+';
-            if ( (mss[0].napr==4)
-              || (mss[0].napr==5)  
-              || (mss[0].napr==8)  
-              || (mss[0].napr==10)
+            if ( (tmpSort.napr==4)
+              || (tmpSort.napr==5)  
+              || (tmpSort.napr==8)  
+              || (tmpSort.napr==10)
                   )
             vg::teleMsg[2] = '-';
-            vg::teleMsg[3] = map[mss[0].sFist] + '0';
-            vg::teleMsg[4] = map[mss[0].sNext] + '0';
+            vg::teleMsg[3] = map[tmpSort.sFist] + '0';
+            vg::teleMsg[4] = map[tmpSort.sNext] + '0';
             lenRender = mss[0].Len;
             flNewLen = true;
             eventMassStep = InitOutDac;

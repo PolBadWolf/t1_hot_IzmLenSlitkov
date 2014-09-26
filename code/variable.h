@@ -16,6 +16,7 @@ namespace vg
   */
   //extern __eeprom TDateSmena ee_Archiv[];
   __eeprom extern unsigned int rs_Dat[8];
+  __eeprom extern unsigned int prcPorog;
   extern unsigned int rs_slitok_len;
   extern unsigned int rs_slitok_speed;
   extern __eeprom unsigned char kf_usr;
