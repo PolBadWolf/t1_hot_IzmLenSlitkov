@@ -30,6 +30,7 @@ struct TbSens
         int      sFist;
         int      sNext;
         int      offset;
+        int      defBit;
         TbSensor sensor[8];
 } _Sens;
 //---------------------------------------------------------------------------
@@ -114,12 +115,15 @@ void __fastcall TForm1::BbSaveData()
         int nSolushin;
         int napr, sFist, sNext;
         int fist, next, offsetd;
+        int defBit;
         // read date
         // simbol len
         for (int i=0; i<sizeof(_Sens.len); i++)
         {
                 lenS[i] = bBuff[i+6];
         }
+        //def
+        defBit = bBuff[5];
         // fist - 12
         fist = bBuff[12];
         // next - 13
@@ -235,6 +239,8 @@ void __fastcall TForm1::BbSaveData()
         _Sens.sNext = sNext;
         // offset
         _Sens.offset = offsetd;
+        // def
+        _Sens.defBit = defBit;
         TimerRender->Enabled = true;
 }
 //---------------------------------------------------------------------------
@@ -339,7 +345,7 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
         mapIi = 0;
         for (int i=0; i<8; i++)
         {
-                if ( _Sens.sensor[i].timeBegin==0 )
+                if ( _Sens.defBit & (1<<i) )
                         SensInd[i]->Brush->Color = clBlack;
                 else
                 {
@@ -355,68 +361,69 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
         PanelSpeed->Left = (_Sens.sensor[_Sens.sFist].position*sensMetr/1000)+sensOffset;
         PanelSpeed->Width = ((_Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position)
         *sensMetr/1000)-(SensInd[_Sens.sNext]->Width/2)+sensOffset;
-        int sLen, sTime, dochet;
+        //int sLen, sTime;
+        int dochet;
         switch(_Sens.napr)
         {
                 case (1) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = _Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = _Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (2) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
-                        dochet = _Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = _Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (3) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
-                        dochet = _Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = _Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (4) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
-                        dochet = -_Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin -_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (5) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = -_Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (6) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = _Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = _Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (7) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = _Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = _Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (8) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
-                        dochet = -_Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = -_Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (9) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
-                        dochet = _Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position-_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeEnd -_Sens.sensor[_Sens.sFist].timeEnd;
+                        dochet = _Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (10) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = -_Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (11) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = -_Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
                 case (12) :
-                        sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
-                        sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
-                        dochet = -_Sens.offset*sLen/sTime;
+                        //sLen  = _Sens.sensor[_Sens.sNext].position -_Sens.sensor[_Sens.sFist].position;
+                        //sTime = _Sens.sensor[_Sens.sNext].timeBegin-_Sens.sensor[_Sens.sFist].timeBegin;
+                        dochet = -_Sens.offset;//*sLen*Edit_kspeed->Text.ToInt()/(2*sTime);
                         break;
         }
         if ( (_Sens.sFist==_Sens.next) && (dochet<0) )
@@ -443,15 +450,24 @@ void __fastcall TForm1::TimerRenderTimer(TObject *Sender)
         // speed
         for (int n=1; n<mapIi; n++)
         {
+                double speedTmp;
                 int d1 = mapI[n-1];
                 int d2 = mapI[n];
                 int l = _Sens.sensor[d2].position-_Sens.sensor[d1].position;
                 int tB = _Sens.sensor[d2].timeBegin-_Sens.sensor[d1].timeBegin;
                 int tE = _Sens.sensor[d2].timeEnd-_Sens.sensor[d1].timeEnd;
-                SpeedB[n-1]->Text = (float)l*Edit_kspeed->Text.ToInt()/tB;
+
+                try {speedTmp = (double)l*Edit_kspeed->Text.ToInt()/tB;}
+                catch(...) {speedTmp=-1;}
+                if (speedTmp>0) SpeedB[n-1]->Text = FloatToStr(speedTmp);
+                else            SpeedB[n-1]->Text ="---";
                 int sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedB[n-1]->Width;
                 SpeedB[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
-                SpeedE[n-1]->Text = (float)l*Edit_kspeed->Text.ToInt()/tE;
+
+                try {speedTmp = (double)l*Edit_kspeed->Text.ToInt()/tE;}
+                catch(...) {speedTmp=-1;}
+                if (speedTmp>0) SpeedE[n-1]->Text = FloatToStr(speedTmp);
+                else            SpeedE[n-1]->Text = "---";
                 sh = SensInd[d2]->Left-SensInd[d1]->Left-SpeedE[n-1]->Width;
                 SpeedE[n-1]->Left = SensInd[d1]->Left+(sh/2)+sensOffset;//+(Shape1->Width/2);
         }

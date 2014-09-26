@@ -311,7 +311,6 @@ namespace ns_izmlen1
                 // error - reset izmer & 
                 datTimeFlagReg = 0;
                 WarningEnabled();
-                //eventMassStep = InitWaitFreeSensors;
                 eventMassStep = IzmRender;
             }
         }
@@ -477,7 +476,7 @@ namespace ns_izmlen1
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
                 base   = vg::rs_Dat[map[u-1]] - vg::rs_Dat[map[d  ]];
                 speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 3;
@@ -507,7 +506,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
                 speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 4;
@@ -537,7 +536,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
                 speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 5;
@@ -567,7 +566,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
                 speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)*10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 6;
@@ -597,7 +596,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d  ]];
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
                 speedSelect(d, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 7;
@@ -627,7 +626,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u-1]]   -    vg::rs_Dat[map[d-1]];
                 offSet = datTimeMassive[map[u-1]][0]-datTimeMassive[map[d-1]][1];
                 speedSelect(d-1, u-1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 8;
@@ -657,7 +656,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u  ]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
                 speedSelect(d+1, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 9;
@@ -687,7 +686,7 @@ namespace ns_izmlen1
                 base   =     vg::rs_Dat[map[u+1]]   -    vg::rs_Dat[map[d+1]];
                 offSet = datTimeMassive[map[u+1]][0]-datTimeMassive[map[d+1]][1];
                 speedSelect(d+1, u+1, maxn, offSet, &sB, &sE, &sLen, &sTime, 0);
-                offSet = ((unsigned long)offSet*sLen/sTime);
+                offSet = ((unsigned long)offSet*sLen*10/sTime+5)/10;
                 if ( offSet<base )
                 {
                     mss[mss_max].napr   = 10;
@@ -720,13 +719,37 @@ namespace ns_izmlen1
             bool ok = false;
             if (datTimeMassive[i][0]>0)
             {
-                //if ( i==(nDat-1) )
-                    ok = true;
-                //if ( i<(nDat-1) )
-                //{
-                //    if ( datTimeMassive[i][0]<datTimeMassive[i+1][0] )
-                //        ok = true;
-                //}
+                if (maxn<2)
+                {
+                    if (maxn==0)
+                        ok = true;
+                    if (maxn==1)
+                    {
+                        if (datTimeMassive[i][0]>datTimeMassive[map[maxn-1]][0])
+                            ok = true;
+                    }
+                }
+                else
+                {
+                    signed long speed1, speed2, speedO;
+                    unsigned long prcn;
+                    speed1 = (signed long)10000*(vg::rs_Dat[map[maxn-1]]-vg::rs_Dat[map[maxn-2]])/(datTimeMassive[map[maxn-1]][0]-datTimeMassive[map[maxn-2]][0]);
+                    speed2 = (signed long)10000*(vg::rs_Dat[i          ]-vg::rs_Dat[map[maxn-1]])/(datTimeMassive[i          ][0]-datTimeMassive[map[maxn-1]][0]);
+                    if (speed2>0)
+                    {
+                        if (speed1<speed2)
+                        {
+                            speedO = speed1;
+                            speed1 = speed2;
+                            speed2 = speedO;
+                        }
+                        prcn = (signed long)(speed1*1000/speed2);
+                        prcn = prcn-1000;
+                        if ( prcn<100 )
+                            ok = true;
+
+                    }
+                }
             }
             if (ok)
             {

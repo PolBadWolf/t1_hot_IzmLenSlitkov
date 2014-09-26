@@ -16,21 +16,21 @@ void main(void)
   
 //    ns_izmlen1::SendDebug();
   ns_izmlen1::datTimeMassive[0][0] = 1;
-  ns_izmlen1::datTimeMassive[0][1] = 6401;
-  ns_izmlen1::datTimeMassive[1][0] = 5006;
-  ns_izmlen1::datTimeMassive[1][1] = 11404;
-  ns_izmlen1::datTimeMassive[2][0] = 10009;
-  ns_izmlen1::datTimeMassive[2][1] = 16407;
-  ns_izmlen1::datTimeMassive[3][0] = 15012;
-  ns_izmlen1::datTimeMassive[3][1] = 21413;
-  ns_izmlen1::datTimeMassive[4][0] = 20015;
-  ns_izmlen1::datTimeMassive[4][1] = 26416;
-  ns_izmlen1::datTimeMassive[5][0] = 24786;
-  ns_izmlen1::datTimeMassive[5][1] = 31169;
-  ns_izmlen1::datTimeMassive[6][0] = 46786;
-  ns_izmlen1::datTimeMassive[6][1] = 53185;
-  ns_izmlen1::datTimeMassive[7][0] = 49337;
-  ns_izmlen1::datTimeMassive[7][1] = 55738;
+  ns_izmlen1::datTimeMassive[0][1] = 24305;
+  ns_izmlen1::datTimeMassive[1][0] = 0;
+  ns_izmlen1::datTimeMassive[1][1] = 0;
+  ns_izmlen1::datTimeMassive[2][0] = 6255;
+  ns_izmlen1::datTimeMassive[2][1] = 30561;
+  ns_izmlen1::datTimeMassive[3][0] = 9383;
+  ns_izmlen1::datTimeMassive[3][1] = 33687;
+  ns_izmlen1::datTimeMassive[4][0] = 12509;
+  ns_izmlen1::datTimeMassive[4][1] = 36814;
+  ns_izmlen1::datTimeMassive[5][0] = 15479;
+  ns_izmlen1::datTimeMassive[5][1] = 39785;
+  ns_izmlen1::datTimeMassive[6][0] = 30961;
+  ns_izmlen1::datTimeMassive[6][1] = 55267;
+  ns_izmlen1::datTimeMassive[7][0] = 29238;
+  ns_izmlen1::datTimeMassive[7][1] = 0;
     ns_izmlen1::IzmRenderMain();
    
   _delay_ms(1000);
