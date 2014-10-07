@@ -697,26 +697,53 @@ namespace ns_izmlen1
     // ===========================================================================
     void IzmRenderMain()
     {
+        signed char mapD[nDat];
         // reset map
         for(unsigned char i=0; i<nDat; i++)
         {
             map[i] = -1;
+            maDP[i] = -1;
         }
         // init map
         maxn      = 0;
+        // drop no signal sensor
+        unsigned char maxnD = 0;
         datErrTmp = 0;
+        for(unsigned char i=0;i<nDat; i++)
+        {
+            if (datTimeMassive[i][0]>0)
+            {
+                mapD[maxnD] = i;
+                maxnD++;
+            }
+            else
+                datErrTmp |= 1<<i;
+        }
+        // ==========================================
+        // find speed
+        for (unsigned char f=0; f<(
+        // ==========================================
         for(unsigned char i=0; i<nDat; i++)
         {
             bool ok = false;
+            bool okO = false;
             if (datTimeMassive[i][0]>0)
             {
+                if (maxnO<2)
+                    okO = true;
+                else
+                {
+                    if (datTimeMassive[i][0]>datTimeMassive[mapO[maxnO-1]][0])
+                        okO = true;
+                }
                 if (maxn<2)
                 {
                     if (maxn==0)
                         ok = true;
                     if (maxn==1)
                     {
-                        if (datTimeMassive[i][0]>datTimeMassive[map[maxn-1]][0])
+//                        if (datTimeMassive[i][0]>datTimeMassive[map[maxn-1]][0])
+                        if (datTimeMassive[i][0]>datTimeMassive[mapO[maxnO-1]][0])
                             ok = true;
                     }
                 }
@@ -736,11 +763,16 @@ namespace ns_izmlen1
                         }
                         prcn = (signed long)(speed1*1000/speed2);
                         prcn = prcn-1000;
-                        if ( prcn<vg::prcPorog )
+                        if ( (prcn<vg::prcPorog) || (maxn<4) )
                             ok = true;
 
                     }
                 }
+            }
+            if (okO)
+            {
+                mapO[maxnO] = i;
+                maxnO++;
             }
             if (ok)
             {
