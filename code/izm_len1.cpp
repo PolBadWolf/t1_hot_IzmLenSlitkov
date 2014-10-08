@@ -695,17 +695,28 @@ namespace ns_izmlen1
             return stat;
         }
     // ===========================================================================
+    signed int Procent(signed int speed1, signed int speed2)
+    {
+        signed int x;
+        if (speed2>speed1)
+        {
+            x = speed1;
+            speed1 = speed2;
+            speed2 = x;
+        }
+        x = ((signed long)1000*speed1/speed2)-1000;
+        return x;
+    }
+#define dlinBuf 8
     void IzmRenderMain()
     {
+        signed long speedObr;
         signed char mapD[nDat];
         // reset map
         for(unsigned char i=0; i<nDat; i++)
         {
-            map[i] = -1;
-            maDP[i] = -1;
+            mapD[i] = -1;
         }
-        // init map
-        maxn      = 0;
         // drop no signal sensor
         unsigned char maxnD = 0;
         datErrTmp = 0;
@@ -719,70 +730,110 @@ namespace ns_izmlen1
             else
                 datErrTmp |= 1<<i;
         }
-        // ==========================================
-        // find speed
-        for (unsigned char f=0; f<(
-        // ==========================================
-        for(unsigned char i=0; i<nDat; i++)
+        if (maxnD>3)
         {
-            bool ok = false;
-            bool okO = false;
-            if (datTimeMassive[i][0]>0)
+            // ==========================================
+            // find speed
+            class TspeedF
             {
-                if (maxnO<2)
-                    okO = true;
-                else
+            public:
+                unsigned int speed;
+                unsigned char n;
+                TspeedF()
                 {
-                    if (datTimeMassive[i][0]>datTimeMassive[mapO[maxnO-1]][0])
-                        okO = true;
+                    speed = 0;
+                    n = 0;
                 }
-                if (maxn<2)
+            };
+            TspeedF speedF[dlinBuf];
+            for (unsigned char f=0; f<(maxnD-1); f++)
+            {
+                speedObr = (signed long)ftUserTimer*(vg::rs_Dat[mapD[f+1]]-vg::rs_Dat[mapD[f]])/(datTimeMassive[mapD[f+1]][0]-datTimeMassive[mapD[f]][0]);
+                if ( (speedObr<1000) || (speedObr>3000 ) )
+                    continue;
+                // okrugl
+                speedObr = (speedObr+5)/10;
+                speedObr = speedObr*10;
+                for (unsigned char i=0; i<dlinBuf; i++)
                 {
-                    if (maxn==0)
-                        ok = true;
-                    if (maxn==1)
+                    if ( (speedF[i].speed==0) || (speedF[i].speed==speedObr) )
                     {
-//                        if (datTimeMassive[i][0]>datTimeMassive[map[maxn-1]][0])
-                        if (datTimeMassive[i][0]>datTimeMassive[mapO[maxnO-1]][0])
-                            ok = true;
-                    }
-                }
-                else
-                {
-                    signed long speed1, speed2, speedO;
-                    unsigned long prcn;
-                    speed1 = (signed long)10000*(vg::rs_Dat[map[maxn-1]]-vg::rs_Dat[map[maxn-2]])/(datTimeMassive[map[maxn-1]][0]-datTimeMassive[map[maxn-2]][0]);
-                    speed2 = (signed long)10000*(vg::rs_Dat[i          ]-vg::rs_Dat[map[maxn-1]])/(datTimeMassive[i          ][0]-datTimeMassive[map[maxn-1]][0]);
-                    if (speed2>0)
-                    {
-                        if (speed1<speed2)
-                        {
-                            speedO = speed1;
-                            speed1 = speed2;
-                            speed2 = speedO;
-                        }
-                        prcn = (signed long)(speed1*1000/speed2);
-                        prcn = prcn-1000;
-                        if ( (prcn<vg::prcPorog) || (maxn<4) )
-                            ok = true;
-
+                        speedF[i].speed = speedObr;
+                        speedF[i].n++;
+                        break;
                     }
                 }
             }
-            if (okO)
+            unsigned char speedN = 0;
+            speedObr = 0;
+            for (unsigned char i=0; i<dlinBuf; i++)
             {
-                mapO[maxnO] = i;
-                maxnO++;
+                if (speedF[i].speed==0)
+                    break;
+                else
+                {
+                    speedObr = speedObr + (signed long)speedF[i].speed*speedF[i].n;
+                    speedN = speedN + speedF[i].n;
+                }
             }
-            if (ok)
+            speedObr = speedObr / speedN;
+            // ========================================
+            // init map
+            maxn = 0;
+            for(unsigned char i=0; i<nDat; i++)
             {
-                map[maxn] = i;
-                maxn++;
+                map[i] = -1;
             }
-            else
-                datErrTmp |= 1<<i;
+            // ==================================
+            signed long speed1, speed2;
+            unsigned int prc1, prc2;
+            unsigned char strt;
+            //check sensor 1
+            for (unsigned char fist=0; ((fist<maxnD-1) && (maxn==0)); fist++)
+            {
+                for (unsigned char next=fist+1; ( ((next-fist)<5) && (next<maxnD-1) && (maxn==0)); next++)
+                {
+                    speed1 = (signed long)ftUserTimer*(vg::rs_Dat[mapD[next]]-vg::rs_Dat[mapD[fist]])/(datTimeMassive[mapD[next]][0]-datTimeMassive[mapD[fist]][0]);
+                    prc1 = Procent(speedObr, speed1);
+                    if (prc1<vg::prcPorog)
+                    {
+                        map[maxn] = mapD[fist];
+                        maxn++;
+                        map[maxn] = mapD[next];
+                        maxn++;
+                        strt = next+1;
+                        break;
+                    }
+                }
+            }
+            // check 1,2 speed for 1 sensors
+            for (unsigned char i=strt; i<maxnD; i++)
+            {
+                speed1 = (signed long)ftUserTimer*(vg::rs_Dat[ map[maxn-1]]-vg::rs_Dat[ map[maxn-2]])/(datTimeMassive[ map[maxn-1]][0]-datTimeMassive[ map[maxn-2]][0]);
+                speed2 = (signed long)ftUserTimer*(vg::rs_Dat[mapD[i     ]]-vg::rs_Dat[mapD[i-1   ]])/(datTimeMassive[mapD[i     ]][0]-datTimeMassive[mapD[i-1   ]][0]);
+                prc1 = Procent(speed1  , speed2);
+                prc2 = Procent(speedObr, speed2);
+                if ( (prc1<vg::prcPorog) && (prc2<vg::prcPorog) )
+                {
+                    map[maxn] = mapD[i];
+                    maxn++;
+                    continue;
+                }
+            }
+            // ==========================
+            // mark bad sensor
+            prc2 = 0;
+            for (unsigned char i=0; i<nDat; i++)
+            {
+                if (map[prc2]==i)
+                    prc2++;
+                else
+                    datErrTmp |= 1<<i;
+            }
+            speedN = speedN+1;
         }
-        // 
+        // =========================================
+        // ==========================================
         if (maxn<3)
         {   // all bad
             WarningEnabled();
