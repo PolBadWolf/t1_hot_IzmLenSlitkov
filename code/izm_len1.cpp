@@ -92,6 +92,7 @@ namespace ns_izmlen1
     void WaitEndOutDacTimer();
     // =========================================================================
     // =========================================================================
+    signed long speedObr;
     // =========================================================================
 #define EvMain      0
 #define EvTimer     1
@@ -326,6 +327,18 @@ namespace ns_izmlen1
             datErrTmp = 0;
         }
     }
+    signed int Procent(signed int speed1, signed int speed2)
+    {
+        signed int x;
+        if (speed2>speed1)
+        {
+            x = speed1;
+            speed1 = speed2;
+            speed2 = x;
+        }
+        x = ((signed long)1000*speed1/speed2)-1000;
+        return x;
+    }
     // =========================================================================
     struct st_mss
     {
@@ -350,10 +363,11 @@ namespace ns_izmlen1
         class strSpeed
         {
         public:
-            signed int  sLen, sTime;
+            unsigned int  sLen;
+            unsigned long sTime;
             signed char sb, se, pr;
         };
-        void speedSelect(signed char d, signed char u, unsigned char maxn, signed int dochet, unsigned char *sB, unsigned char *sE, unsigned int *sLen, unsigned int *sTime, bool dp)
+        void speedSelect(signed char d, signed char u, unsigned char maxn, signed long dochet, unsigned char *sB, unsigned char *sE, unsigned int *sLen, unsigned long *sTime, bool dp)
         {
             signed char sb, se;
             strSpeed mass[6];
@@ -361,7 +375,7 @@ namespace ns_izmlen1
             // [u]-[u-1]
             se = u;
             sb = u-1;
-            if ( (se<maxn) && (sb>=0) )
+            if ( (se<maxn) && (sb>=0) && (datTimeMassive[map[se]][0]>0) && (datTimeMassive[map[sb]][0]>0) )
             {
                 mass[massMax].sb    = sb;
                 mass[massMax].se    = se;
@@ -373,7 +387,7 @@ namespace ns_izmlen1
             // [d]-[d-1]
             se = d;
             sb = d-1;
-            if ( (se<maxn) && (sb>=0) )
+            if ( (se<maxn) && (sb>=0) && (datTimeMassive[map[se]][1]>0) && (datTimeMassive[map[sb]][1]>0) )
             {
                 mass[massMax].sb    = sb;
                 mass[massMax].se    = se;
@@ -385,7 +399,7 @@ namespace ns_izmlen1
             // [u+1]-[u]
             se = u+1;
             sb = u;
-            if ( (se<maxn) && (sb>=0) )
+            if ( (se<maxn) && (sb>=0) && (datTimeMassive[map[se]][0]>0) && (datTimeMassive[map[sb]][0]>0) )
             {
                 mass[massMax].sb    = sb;
                 mass[massMax].se    = se;
@@ -397,7 +411,7 @@ namespace ns_izmlen1
             // [u]-[u-2]
             se = u;
             sb = u-2;
-            if ( (se<maxn) && (sb>=0) )
+            if ( (se<maxn) && (sb>=0) &&(datTimeMassive[map[se]][0]>0) && (datTimeMassive[map[sb]][0]>0) )
             {
                 mass[massMax].sb    = sb;
                 mass[massMax].se    = se;
@@ -409,7 +423,7 @@ namespace ns_izmlen1
             // [d+1]-[d]
             se = d+1;
             sb = d;
-            if ( (se<maxn) && (sb>=0) )
+            if ( (se<maxn) && (sb>=0) && (datTimeMassive[map[se]][1]>0) && (datTimeMassive[map[sb]][1]>0) )
             {
                 mass[massMax].sb    = sb;
                 mass[massMax].se    = se;
@@ -444,9 +458,10 @@ namespace ns_izmlen1
             if ( (d<0) || (u>=maxn)  )   return 0;
             unsigned char stat = 0;
             unsigned int base;
-            unsigned int offSet;
+            unsigned long offSet;
             unsigned char sB,   sE;
-            unsigned int  sLen, sTime;
+            unsigned int  sLen;
+            unsigned long sTime;
             base   =     vg::rs_Dat[map[u]]   -    vg::rs_Dat[map[d]];
             offSet = datTimeMassive[map[d]][1]-datTimeMassive[map[u]][0];
             speedSelect(d, u, maxn, offSet, &sB, &sE, &sLen, &sTime, 1);
@@ -470,9 +485,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                  signed int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u-1]][0];
                 if (offSet>0)
                 {
@@ -503,9 +519,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                  signed int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[u  ]][0]-datTimeMassive[map[d  ]][1];
                 if (offSet>0)
                 {
@@ -536,9 +553,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                  signed int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
                 if (offSet>0)
                 {
@@ -569,9 +587,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                  signed int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[d  ]][1]-datTimeMassive[map[u  ]][0];
                 if (offSet>0)
                 {
@@ -602,9 +621,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                  signed int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[u-1]][0]-datTimeMassive[map[d-1]][1];
                 if (offSet>0)
                 {
@@ -635,9 +655,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                  signed int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[d+1]][1]-datTimeMassive[map[u  ]][0];
                 if (offSet>0)
                 {
@@ -668,9 +689,10 @@ namespace ns_izmlen1
             unsigned char stat = 0;
             {
                 unsigned int base;
-                unsigned int offSet;
+                  signed long offSet;
                 unsigned char sB,   sE;
-                unsigned int  sLen, sTime;
+                unsigned int  sLen;
+                unsigned long sTime;
                 offSet = datTimeMassive[map[u+1]][0]-datTimeMassive[map[d+1]][1];
                 if (offSet>0)
                 {
@@ -695,22 +717,10 @@ namespace ns_izmlen1
             return stat;
         }
     // ===========================================================================
-    signed int Procent(signed int speed1, signed int speed2)
-    {
-        signed int x;
-        if (speed2>speed1)
-        {
-            x = speed1;
-            speed1 = speed2;
-            speed2 = x;
-        }
-        x = ((signed long)1000*speed1/speed2)-1000;
-        return x;
-    }
 #define dlinBuf 8
     void IzmRenderMain()
     {
-        signed long speedObr;
+        
         signed char mapD[nDat];
         // reset map
         for(unsigned char i=0; i<nDat; i++)
