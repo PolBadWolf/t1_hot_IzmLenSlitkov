@@ -40,6 +40,7 @@ namespace ns_izmlen1
 #endif
     // time massive
     unsigned long datTimeMassive[nDat][2];
+    unsigned long datTimeMassiveS[nDat][2];
     unsigned long datTime;
     unsigned char datTimeFlagReg = 0;
       signed char datRegCurMax = -1;
@@ -728,9 +729,14 @@ namespace ns_izmlen1
             mapD[i] = -1;
         }
         // crutches
-        for (unsigned char i=3; i<nDat; i++)
+        for (unsigned char i=0; i<nDat; i++)
         {
-            datTimeMassive[i][1] = 0;
+            datTimeMassiveS[i][0] = datTimeMassive[i][0];
+            datTimeMassiveS[i][1] = datTimeMassive[i][1];
+            if (i>2)
+            {
+                datTimeMassive[i][1] = 0;
+            }
         }
         // drop no signal sensor
         unsigned char maxnD = 0;
@@ -1004,7 +1010,7 @@ namespace ns_izmlen1
             + simLen
             + 7                     // fist, next, napr, sFist, sNext, dochet
             + sizeof(vg::rs_Dat)
-            + sizeof(datTimeMassive)
+            + sizeof(datTimeMassiveS)
             + sizeof(fTik)          // f tik
             + sizeof(unsigned char) // crc
             ;
@@ -1068,11 +1074,11 @@ namespace ns_izmlen1
         // datTimeMassive
         for (unsigned char l=0; l<2; l++)
         {
-            for (unsigned char n=0; n<(sizeof(datTimeMassive)/(sizeof(datTimeMassive[0][0])*2)); n++)
+            for (unsigned char n=0; n<(sizeof(datTimeMassiveS)/(sizeof(datTimeMassiveS[0][0])*2)); n++)
             {
-                for (unsigned char b=0; b<sizeof(datTimeMassive[0][0]); b++)
+                for (unsigned char b=0; b<sizeof(datTimeMassiveS[0][0]); b++)
                 {
-                    massSend[massSendIdx++] = ((unsigned char *)&datTimeMassive[n][l])[b];
+                    massSend[massSendIdx++] = ((unsigned char *)&datTimeMassiveS[n][l])[b];
                 }
             }
         }
