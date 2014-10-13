@@ -727,6 +727,11 @@ namespace ns_izmlen1
         {
             mapD[i] = -1;
         }
+        // crutches
+        for (unsigned char i=3; i<nDat; i++)
+        {
+            datTimeMassive[i][1] = 0;
+        }
         // drop no signal sensor
         unsigned char maxnD = 0;
         datErrTmp = 0;
