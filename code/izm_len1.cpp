@@ -733,7 +733,7 @@ namespace ns_izmlen1
         {
             datTimeMassiveS[i][0] = datTimeMassive[i][0];
             datTimeMassiveS[i][1] = datTimeMassive[i][1];
-            if (i>2)
+            if (i>=vg::crutchesTail)
             {
                 datTimeMassive[i][1] = 0;
             }
@@ -927,7 +927,7 @@ namespace ns_izmlen1
                     flSort = false;
                     for (unsigned char n=1; n<mss_max; n++)
                     {
-                        if ( (mss[n-1].dochet>(mss[n].dochet-50))
+                        if ( (mss[n-1].dochet>(mss[n].dochet-5))
 //                          && (mss[n-1].dochet>(mss[n].
                           && ( (vg::rs_Dat[map[mss[n-1].sNext]]-vg::rs_Dat[map[mss[n-1].sFist]])
                               > (vg::rs_Dat[map[mss[n  ].sNext]]-vg::rs_Dat[map[mss[n  ].sFist]]) )

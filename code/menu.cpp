@@ -96,6 +96,15 @@ namespace ns_menu
   void LevelSpeedYn();
   void LevelSpeedYn_zm();
   void LevelSpeedYn_zp();
+  void CrutchesTail();
+  unsigned char crutchesTailTemp;
+  void CrutchesTail();
+  void CrutchesTail_v();
+  void CrutchesTail_zm();
+  void CrutchesTail_zp();
+  void CrutchesTailYn();
+  void CrutchesTailYn_zp();
+  void CrutchesTailYn_zm();
   // ================================================================================================================
     void DebugScrSpeed();
     void DebugScrSpeed_v();
@@ -132,7 +141,10 @@ namespace ns_menu
     { FnVoid            , SetupMenu     , LevelSpeed_zm   , LevelSpeed_zp   , LevelSpeedYn    , Default         , LevelSpeed      },
 #define UkLevelSpeedYn    13
     { FnVoid            , FnVoid        , LevelSpeedYn_zm , LevelSpeedYn_zp , FnVoid          , Default         , LevelSpeedYn    },
-    { FnVoid            , FnVoid        , FnVoid,           FnVoid,           FnVoid          , FnVoid          , FnVoid          }
+#define UkCrutchesTail    14
+    { FnVoid            , FnVoid        , CrutchesTail_zm,  CrutchesTail_zp,  FnVoid          , Default         , CrutchesTail    },
+#define UkCrutchesTailYn    15
+    { FnVoid            , FnVoid        , CrutchesTailYn_zm,CrutchesTailYn_zp,FnVoid          , Default         , CrutchesTailYn    }
   };
   unsigned char __flash  PaswordF[InputSetup_CurPswLen] = { 3, 2, 4, 6, 1 };
   // ================================================================================================================
@@ -377,7 +389,7 @@ namespace ns_menu
     }
   }
   // ================================================================================================================
-#define SetupLen 12
+#define SetupLen 13
   char __flash SetupMenu_msg1[] = "Menu:";
   char __flash  SetupMenuList[SetupLen][17] = {
      { "Distance to S1  " }
@@ -391,6 +403,7 @@ namespace ns_menu
     ,{ "Debug scr speed " }
     ,{ "Debug out DAC   " }
     ,{ "Set %level speed" }
+    ,{ "Set sensCrutches" }
     ,{ "Set new password" }
   };
   void SetupMenu()
@@ -453,7 +466,7 @@ namespace ns_menu
   }
   void SetupMenu_i()
   {
-    if (SetupMenuInd==11)
+    if (SetupMenuInd==12)
     {
       SetPassword();
       return;
@@ -476,6 +489,11 @@ namespace ns_menu
     if (SetupMenuInd==10)
     {
       LevelSpeed();
+      return;
+    }
+    if (SetupMenuInd==11)
+    {
+      CrutchesTail();
       return;
     }
   }
@@ -881,7 +899,63 @@ namespace ns_menu
         SetupMenu();
     }
   // ================================================================================================================
-  // ================================================================================================================
+    char __flash crutchesTail_msg1[] = "Crutches Tail";
+    char __flash crutchesTail_msg2[] = "from sensor=3";
+    void CrutchesTail()
+    {
+        step = UkCrutchesTail;
+        {
+          CritSec cs;
+          timeout_max = 60000;
+          timeout = timeout_max;
+        }
+        scr->Clear();
+        scr->F_String ( 0, crutchesTail_msg1);
+        scr->F_String (16, crutchesTail_msg2);
+        crutchesTailTemp = vg::crutchesTail;
+        CrutchesTail_v();
+    }
+    void CrutchesTail_v()
+    {
+        scr->F_Char    (28, '0'+(crutchesTailTemp%10) );
+    }
+    void CrutchesTail_zm()
+    {
+        if (crutchesTailTemp>2)
+            crutchesTailTemp--;
+        else
+            crutchesTailTemp = 2;
+        CrutchesTail_v();
+    }
+    void CrutchesTail_zp()
+    {
+        if (crutchesTailTemp<8)
+            crutchesTailTemp++;
+        else
+            crutchesTailTemp = 8;
+        CrutchesTail_v();
+    }
+    void CrutchesTailYn()
+    {
+        step = UkCrutchesTailYn;
+        scr->Clear();
+        scr->F_String(16 , levelSpeedYn_msg1 );
+        {
+          CritSec cs;
+          timeout_max = 30000;
+          timeout = timeout_max;
+        }
+    }
+    void CrutchesTailYn_zp()
+    {
+        vg::crutchesTail = crutchesTailTemp;
+        ExitSetup();
+    }
+    void CrutchesTailYn_zm()
+    {
+        SetupMenu();
+    }
+    // ================================================================================================================
   // ================================================================================================================
   // ================================================================================================================
   // ================================================================================================================
