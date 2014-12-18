@@ -142,7 +142,7 @@ namespace ns_menu
 #define UkLevelSpeedYn    13
     { FnVoid            , FnVoid        , LevelSpeedYn_zm , LevelSpeedYn_zp , FnVoid          , Default         , LevelSpeedYn    },
 #define UkCrutchesTail    14
-    { FnVoid            , FnVoid        , CrutchesTail_zm,  CrutchesTail_zp,  FnVoid          , Default         , CrutchesTail    },
+    { FnVoid            , ExitSetup     , CrutchesTail_zm,  CrutchesTail_zp,  CrutchesTailYn  , Default         , CrutchesTail    },
 #define UkCrutchesTailYn    15
     { FnVoid            , FnVoid        , CrutchesTailYn_zm,CrutchesTailYn_zp,FnVoid          , Default         , CrutchesTailYn    }
   };
